@@ -225,9 +225,94 @@ editor.addEventListener("submit", async (event) => {
     showList();
   } catch (error) {
     editorStatus.textContent = error.message === "peso"
-      ? "La foto pesa más de 5 MB."
+      ? "La foto pesa más de 15 MB."
       : "No se pudo guardar. Revisa la foto y vuelve a intentar.";
   }
+});
+
+async function downloadAuth(path, filename) {
+  const headers = {};
+  const key = sessionStorage.getItem(KEY);
+  if (key) headers["X-Admin-Key"] = key;
+  const response = await fetch(path, { headers, cache: "no-store" });
+  if (response.status === 401) throw new Error("auth");
+  if (!response.ok) throw new Error("request");
+  const blob = await response.blob();
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+async function uploadTable(path, file) {
+  const headers = {};
+  const key = sessionStorage.getItem(KEY);
+  if (key) headers["X-Admin-Key"] = key;
+  const zip = /\.zip$/i.test(file.name) || file.type === "application/zip";
+  if (zip) headers["Content-Type"] = "application/zip";
+  const response = await fetch(path, { method: "POST", headers, body: file, cache: "no-store" });
+  if (response.status === 401) throw new Error("auth");
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "request");
+  return data;
+}
+
+document.getElementById("download-backup").addEventListener("click", async () => {
+  const status = document.getElementById("tools-status");
+  status.textContent = "Preparando respaldo…";
+  try {
+    await downloadAuth("/api/admin/backup", "oasis-respaldo.zip");
+    status.textContent = "Respaldo descargado.";
+  } catch {
+    status.textContent = "No se pudo descargar el respaldo.";
+  }
+});
+
+document.getElementById("download-template").addEventListener("click", async () => {
+  const status = document.getElementById("tools-status");
+  try {
+    await downloadAuth("/api/admin/plantilla", "oasis-plantilla.csv");
+    status.textContent = "Plantilla descargada. Borra la fila de ejemplo antes de cargarla.";
+  } catch {
+    status.textContent = "No se pudo descargar la plantilla.";
+  }
+});
+
+document.getElementById("restore-backup").addEventListener("change", async (event) => {
+  const input = event.target;
+  const file = input.files?.[0];
+  const status = document.getElementById("tools-status");
+  if (!file) return;
+  if (!confirm("Esto reemplaza el catálogo y las fotos por las del respaldo. ¿Seguir?")) {
+    input.value = "";
+    return;
+  }
+  status.textContent = "Restaurando…";
+  try {
+    const result = await uploadTable("/api/admin/restore", file);
+    await loadProducts();
+    status.textContent = `Catálogo restaurado. ${result.count} perfumes.`;
+  } catch (error) {
+    status.textContent = error.message === "request" ? "No se pudo restaurar el respaldo." : error.message;
+  }
+  input.value = "";
+});
+
+document.getElementById("import-catalog").addEventListener("change", async (event) => {
+  const input = event.target;
+  const file = input.files?.[0];
+  const status = document.getElementById("tools-status");
+  if (!file) return;
+  status.textContent = "Cargando…";
+  try {
+    const result = await uploadTable("/api/admin/import", file);
+    await loadProducts();
+    status.textContent = `Listo. El catálogo quedó con ${result.count} perfumes.`;
+  } catch (error) {
+    status.textContent = error.message === "request" ? "No se pudo cargar el archivo." : error.message;
+  }
+  input.value = "";
 });
 
 if (sessionStorage.getItem(KEY)) {
