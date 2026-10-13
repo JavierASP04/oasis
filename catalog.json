@@ -6,20 +6,20 @@
     "size": "100 ml",
     "price": 40.99,
     "family": "caballero",
-    "accords": "Dátil, canela y vainilla",
-    "summary": "Oriental dulce, cálido y especiado. Se nota al entrar y se vuelve más cremoso con el rato.",
+    "accords": "Geranio, salvia y cedro",
+    "summary": "Aromático y limpio. Geranio al inicio, salvia y jengibre en el centro, cedro y vetiver al secar.",
     "notes": [
       [
         "Salida",
-        "Canela, nuez moscada, bergamota"
+        "Geranio y rosa"
       ],
       [
         "Corazón",
-        "Dátil, praliné, nardo"
+        "Salvia y jengibre"
       ],
       [
         "Fondo",
-        "Vainilla, haba tonka, ámbar"
+        "Cedro y vetiver"
       ]
     ],
     "image": "images/khamrah.jpg"
@@ -31,20 +31,20 @@
     "size": "100 ml",
     "price": 44.99,
     "family": "caballero",
-    "accords": "Pimienta, tabaco y ámbar",
-    "summary": "Especiado y oscuro, con tabaco y un fondo ambarado. Encaja de noche.",
+    "accords": "Azafrán, tabaco y ámbar",
+    "summary": "Especiado y seco. Azafrán y toronja al entrar, tabaco en el centro y ámbar al final.",
     "notes": [
       [
         "Salida",
-        "Pimienta negra, tabaco, piña"
+        "Pimienta rosa, azafrán y toronja"
       ],
       [
         "Corazón",
-        "Café, iris"
+        "Tabaco, cedro y vainilla"
       ],
       [
         "Fondo",
-        "Vainilla, ámbar, benjuí"
+        "Pachulí, incienso, cashmerán y ámbar seco"
       ]
     ],
     "image": "images/asad.jpg"
@@ -56,20 +56,20 @@
     "size": "100 ml",
     "price": 45.99,
     "family": "dama",
-    "accords": "Orquídea, fruta tropical y vainilla",
-    "summary": "Aroma gourmand intenso y dulce, que combina fresas acarameladas, notas florales y un fondo de vainilla y ámbar.",
+    "accords": "Fresa, jazmín y vainilla",
+    "summary": "Dulce y goloso. Fresa acaramelada al inicio, flores en el centro y vainilla con caramelo al secar.",
     "notes": [
       [
         "Salida",
-        "S'mores de fresa (fresa acaramelada/tostada) y grosella negra."
+        "S'mores de fresa y grosella negra"
       ],
       [
         "Corazón",
-        "Jazmín y flor de azahar del naranjo."
+        "Jazmín y flor de azahar"
       ],
       [
         "Fondo",
-        "Vainilla, caramelo, ámbar y almizcle."
+        "Vainilla, caramelo, ámbar y almizcle"
       ]
     ],
     "image": "images/yara.jpg"
@@ -81,20 +81,20 @@
     "size": "100 ml",
     "price": 51.99,
     "family": "caballero",
-    "accords": "Melocotón, rosa y vainilla",
-    "summary": "Cálida, especiada, dulce y amaderada, centrada en notas de mandarina, caramelo y vainilla",
+    "accords": "Mandarina, caramelo y vainilla",
+    "summary": "Cítrico al entrar y más dulce después. Mandarina, caramelo y un fondo de vainilla.",
     "notes": [
       [
         "Salida",
-        "Mandarina, naranja, lavanda, cardamomo y pimienta negra."
+        "Mandarina, naranja, salvia esclarea, lavanda, cardamomo y pimienta negra"
       ],
       [
         "Corazón",
-        "Caramelo, haba tonka, incienso y pachulí."
+        "Incienso, pachulí, caramelo y haba tonka"
       ],
       [
         "Fondo",
-        "Vainilla y vetiver."
+        "Vetiver y vainilla"
       ]
     ],
     "image": "images/mayar.jpg"
@@ -106,20 +106,20 @@
     "size": "100 ml",
     "price": 48.99,
     "family": "caballero",
-    "accords": "Azafrán, oud y vainilla",
-    "summary": "Oud pulido, con azafrán y lavanda al inicio. Elegante, sin exceso de dulzor.",
+    "accords": "Frutas tropicales, guayaba y notas marinas",
+    "summary": "Fresco y playero. Fruta y toronja al inicio, agua de mar y guayaba después.",
     "notes": [
       [
         "Salida",
-        "Azafrán, lavanda, nuez moscada"
+        "Frutas tropicales y toronja"
       ],
       [
         "Corazón",
-        "Oud"
+        "Notas marinas y guayaba"
       ],
       [
         "Fondo",
-        "Pachulí, vainilla"
+        "Almizcle y maderas"
       ]
     ],
     "image": "images/oud-for-glory.jpg"
@@ -131,20 +131,20 @@
     "size": "100 ml",
     "price": 25.99,
     "family": "caballero",
-    "accords": "Manzana, canela y notas acuáticas",
-    "summary": "Fresco y juvenil. Manzana especiada sobre un fondo limpio.",
+    "accords": "Piña, azafrán y cedro",
+    "summary": "Piña dulce al entrar, con jazmín y un fondo de cedro y ámbar.",
     "notes": [
       [
         "Salida",
-        "Manzana, bergamota, canela"
+        "Piña y azafrán"
       ],
       [
         "Corazón",
-        "Notas acuáticas, flor de azahar"
+        "Jazmín y abeto balsámico"
       ],
       [
         "Fondo",
-        "Ámbar gris, almizcle, maderas"
+        "Cedro, ámbar y oud"
       ]
     ],
     "image": "images/hawas.jpg"
@@ -156,20 +156,20 @@
     "size": "75 ml",
     "price": 24.99,
     "family": "caballero",
-    "accords": "Frambuesa, cuero y oud",
-    "summary": "Cuero y frambuesa con azafrán. El más serio de la selección.",
+    "accords": "Manzana, canela y vainilla",
+    "summary": "Manzana fresca con canela. Se vuelve más dulce y almizclado al secar.",
     "notes": [
       [
         "Salida",
-        "Frambuesa, azafrán"
+        "Manzana y bergamota"
       ],
       [
         "Corazón",
-        "Cuero"
+        "Canela y maderas"
       ],
       [
         "Fondo",
-        "Oud, ámbar, maderas"
+        "Almizcle y vainilla"
       ]
     ],
     "image": "images/la-yuqawam.jpg"
@@ -181,20 +181,20 @@
     "size": "100 ml",
     "price": 44.99,
     "family": "caballero",
-    "accords": "Ámbar, almizcle y vainilla",
-    "summary": "Ámbar dulce con un punto frutal. Gana presencia con el calor.",
+    "accords": "Manzana, sandía y ámbar",
+    "summary": "Frutal y fresco. Manzana y lavanda al inicio, sandía en el centro y ámbar al final.",
     "notes": [
       [
         "Salida",
-        "Bergamota, notas verdes"
+        "Manzana, lavanda y bergamota"
       ],
       [
         "Corazón",
-        "Ámbar, notas dulces"
+        "Sandía, cedro y cálamo"
       ],
       [
         "Fondo",
-        "Almizcle, vainilla, cedro"
+        "Ámbar, sándalo y pachulí"
       ]
     ],
     "image": "images/amber-oud-gold.jpg"
@@ -206,20 +206,20 @@
     "size": "100 ml",
     "price": 53.99,
     "family": "dama",
-    "accords": "Limón, jazmín y almizcle",
-    "summary": "Cítrico de salida y almizcle limpio al secar. Pensado para el día.",
+    "accords": "Limón, neroli y vainilla",
+    "summary": "Dulce de limón al entrar, neroli en el centro y vainilla al secar.",
     "notes": [
       [
         "Salida",
-        "Limón, bergamota"
+        "Pie de limón"
       ],
       [
         "Corazón",
-        "Jazmín"
+        "Neroli"
       ],
       [
         "Fondo",
-        "Almizcle, maderas"
+        "Vainilla"
       ]
     ],
     "image": "images/laventure.jpg"
@@ -231,8 +231,8 @@
     "size": "100 ml",
     "price": 27.99,
     "family": "caballero",
-    "accords": "Manzana, canela y vainilla",
-    "summary": "Aroma acuático y fresco con manzana verde crujiente, ideal para el día a día y climas cálidos.",
+    "accords": "Manzana verde, loto y almizcle",
+    "summary": "Acuático y fresco, con manzana verde. Ligero, para el día.",
     "notes": [
       [
         "Salida",
@@ -240,11 +240,11 @@
       ],
       [
         "Corazón",
-        "Flor de loto y mismosa"
+        "Flor de loto y mimosa"
       ],
       [
         "Fondo",
-        "Almizcle, cedro, musgo de roble y ambar"
+        "Almizcle, cedro, musgo de roble y ámbar"
       ]
     ],
     "image": "images/9pm.jpg"
@@ -256,20 +256,20 @@
     "size": "100 ml",
     "price": 24.99,
     "family": "dama",
-    "accords": "Piña, abedul y almizcle",
-    "summary": "Fresco amaderado, seco y con carácter. Piña al inicio, musgo al final.",
+    "accords": "Lichi, rosa y vainilla",
+    "summary": "Frutal y dulce. Lichi y toronja al inicio, rosa y durazno en el centro, vainilla y praliné al final.",
     "notes": [
       [
         "Salida",
-        "Piña, grosella, bergamota"
+        "Lichi, toronja y grosella roja"
       ],
       [
         "Corazón",
-        "Abedul, jazmín"
+        "Rosa, durazno y cedro"
       ],
       [
         "Fondo",
-        "Almizcle, musgo, ámbar gris"
+        "Vainilla, praliné y ámbar"
       ]
     ],
     "image": "images/supremacy-noi.jpg"
@@ -281,12 +281,12 @@
     "size": "100 ml",
     "price": 34.99,
     "family": "dama",
-    "accords": "Frutas rojas y naranja",
-    "summary": "Caracterizado olor frutal y Gourmand (dulce) con notas acarameladas y de frutos rojos",
+    "accords": "Frutas rojas, malvavisco y vainilla",
+    "summary": "Frutal y goloso. Frutas rojas al entrar, malvavisco en el centro y vainilla al secar.",
     "notes": [
       [
         "Salida",
-        "Frutas rojas, naranja"
+        "Frutas rojas y naranja"
       ],
       [
         "Corazón",
@@ -294,7 +294,7 @@
       ],
       [
         "Fondo",
-        "Vainilla, almizcle"
+        "Vainilla, musgo y almizcle"
       ]
     ],
     "image": "images/shaghaf-oud.jpg"
@@ -306,20 +306,20 @@
     "size": "75 ml",
     "price": 44.99,
     "family": "caballero",
-    "accords": "",
-    "summary": "",
+    "accords": "Yuzu, nenúfar y sándalo",
+    "summary": "Cítrico y acuático. Yuzu al inicio, nenúfar en el centro y sándalo con vetiver al final.",
     "notes": [
       [
         "Salida",
-        ""
+        "Yuzu, limón y mandarina"
       ],
       [
         "Corazón",
-        ""
+        "Nenúfar y nuez moscada"
       ],
       [
         "Fondo",
-        ""
+        "Sándalo, vetiver y ámbar"
       ]
     ],
     "image": "images/issey-miyake-l-eau-dissey-pour-homme.jpg"
@@ -331,20 +331,20 @@
     "size": "100 ml",
     "price": 40.99,
     "family": "dama",
-    "accords": "",
-    "summary": "",
+    "accords": "Limón, rosa y vainilla",
+    "summary": "Cítrico al entrar, frutal y floral en el centro, vainilla y ámbar al secar.",
     "notes": [
       [
         "Salida",
-        ""
+        "Bergamota y limón"
       ],
       [
         "Corazón",
-        ""
+        "Casis, coco, ciruela, jazmín y rosa"
       ],
       [
         "Fondo",
-        ""
+        "Benjuí, ámbar, vainilla, sándalo y haba tonka"
       ]
     ],
     "image": "images/rome-extradose-women.jpg"
@@ -356,20 +356,20 @@
     "size": "100 ml",
     "price": 36.99,
     "family": "caballero",
-    "accords": "",
-    "summary": "",
+    "accords": "Manzana, lavanda y haba tonka",
+    "summary": "Fresco y aromático. Manzana y jengibre al inicio, lavanda en el centro y haba tonka al secar.",
     "notes": [
       [
         "Salida",
-        ""
+        "Manzana, bergamota y jengibre"
       ],
       [
         "Corazón",
-        ""
+        "Lavanda, salvia, enebro y geranio"
       ],
       [
         "Fondo",
-        ""
+        "Haba tonka, cedro, ámbar y vetiver"
       ]
     ],
     "image": "images/fakhar-black.jpg"
@@ -381,20 +381,20 @@
     "size": "100 ml",
     "price": 28.99,
     "family": "dama",
-    "accords": "",
-    "summary": "",
+    "accords": "Higo, coco y jazmín",
+    "summary": "Fresco y floral. Melón e higo al entrar, jazmín en el centro y un fondo suave de vainilla.",
     "notes": [
       [
         "Salida",
-        ""
+        "Higo, agua de coco, mandarina verde y melón"
       ],
       [
         "Corazón",
-        ""
+        "Loto, jazmín y nenúfar"
       ],
       [
         "Fondo",
-        ""
+        "Almizcle, sándalo, vainilla y ambroxan"
       ]
     ],
     "image": "images/mayar-2.jpg"
@@ -406,20 +406,20 @@
     "size": "100 ml",
     "price": 38.99,
     "family": "caballero",
-    "accords": "",
-    "summary": "",
+    "accords": "Mandarina, rosa y vainilla",
+    "summary": "Cítrico y especiado al inicio, con rosa en el centro y vainilla con ámbar al final.",
     "notes": [
       [
         "Salida",
-        ""
+        "Mandarina, neroli y cardamomo"
       ],
       [
         "Corazón",
-        ""
+        "Rosa y flor de azahar"
       ],
       [
         "Fondo",
-        ""
+        "Sándalo, vainilla, ámbar y maderas"
       ]
     ],
     "image": "images/odissey-homme.jpg"
@@ -431,20 +431,20 @@
     "size": "100 ml",
     "price": 30.99,
     "family": "caballero",
-    "accords": "",
-    "summary": "",
+    "accords": "Bergamota, lavanda y ámbar",
+    "summary": "Fresco y aromático. Bergamota y jengibre al entrar, lavanda en el centro y ámbar al secar.",
     "notes": [
       [
         "Salida",
-        ""
+        "Bergamota y jengibre"
       ],
       [
         "Corazón",
-        ""
+        "Lavanda y hoja de violeta"
       ],
       [
         "Fondo",
-        ""
+        "Almizcle, sándalo y ámbar"
       ]
     ],
     "image": "images/lataffa-suqraat.jpg"
@@ -456,20 +456,20 @@
     "size": "100 ml",
     "price": 35.99,
     "family": "dama",
-    "accords": "",
-    "summary": "",
+    "accords": "Rosa, almendra y vainilla",
+    "summary": "Dulce y cremoso. Leche de rosa al inicio, merengue y almendra en el centro, vainilla al final.",
     "notes": [
       [
         "Salida",
-        ""
+        "Leche de rosa"
       ],
       [
         "Corazón",
-        ""
+        "Almendra y merengue"
       ],
       [
         "Fondo",
-        ""
+        "Sándalo, vainilla y almizcle"
       ]
     ],
     "image": "images/bade-e-al-oud.jpg"
@@ -481,20 +481,20 @@
     "size": "100 ml",
     "price": 68.99,
     "family": "caballero",
-    "accords": "",
-    "summary": "",
+    "accords": "Cítricos, frutas y vainilla",
+    "summary": "Cítrico al entrar, frutal en el centro y vainilla con ámbar al secar.",
     "notes": [
       [
         "Salida",
-        ""
+        "Naranja, bergamota y limón"
       ],
       [
         "Corazón",
-        ""
+        "Notas frutales"
       ],
       [
         "Fondo",
-        ""
+        "Almizcle blanco, ámbar y vainilla"
       ]
     ],
     "image": "images/bharara-king.jpg"
@@ -506,20 +506,20 @@
     "size": "100 ml",
     "price": 30.99,
     "family": "dama",
-    "accords": "",
-    "summary": "",
+    "accords": "Fresa, caramelo y ámbar",
+    "summary": "Dulce y frutal. Fresas al inicio, caramelo en el centro y ámbar al final.",
     "notes": [
       [
         "Salida",
-        ""
+        "Fresa, frambuesa, bergamota, geranio y durazno"
       ],
       [
         "Corazón",
-        ""
+        "Caramelo, jazmín y maracuyá"
       ],
       [
         "Fondo",
-        ""
+        "Pachulí, almizcle y ámbar"
       ]
     ],
     "image": "images/odissey-candee.jpg"
@@ -531,20 +531,20 @@
     "size": "100 ml",
     "price": 45.99,
     "family": "caballero",
-    "accords": "",
-    "summary": "",
+    "accords": "Bergamota, coco y vainilla",
+    "summary": "Cítrico al entrar, coco y canela en el centro, vainilla y ámbar al secar.",
     "notes": [
       [
         "Salida",
-        ""
+        "Bergamota, notas de nuez y salvia"
       ],
       [
         "Corazón",
-        ""
+        "Coco, canela y notas tropicales"
       ],
       [
         "Fondo",
-        ""
+        "Haba tonka, vainilla y ámbar"
       ]
     ],
     "image": "images/oddisey-artisto.jpg"
