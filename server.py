@@ -20,6 +20,33 @@ EXTENSIONS = {
 }
 
 
+def shrink_photo(blob, extension):
+    """Reduce a phone photo to a catalog JPEG. Keeps GIF and the original if Pillow is missing."""
+    if extension == "gif":
+        return blob, extension
+    try:
+        from io import BytesIO
+        from PIL import Image
+    except ImportError:
+        return blob, extension
+    image = Image.open(BytesIO(blob))
+    image = image.convert("RGB")
+    width, height = image.size
+    longest = max(width, height)
+    if longest > 1200:
+        scale = 1200 / longest
+        image = image.resize(
+            (round(width * scale), round(height * scale)),
+            Image.Resampling.LANCZOS,
+        )
+    buffer = BytesIO()
+    image.save(buffer, "JPEG", quality=80, optimize=True, progressive=True)
+    data = buffer.getvalue()
+    if extension in {"jpg", "jpeg"} and len(data) >= len(blob):
+        return blob, "jpg"
+    return data, "jpg"
+
+
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
@@ -28,7 +55,11 @@ class Handler(SimpleHTTPRequestHandler):
         return self.path.split("?", 1)[0]
 
     def end_headers(self):
-        self.send_header("Cache-Control", "no-store")
+        path = self.path_only()
+        if path.startswith("/images/"):
+            self.send_header("Cache-Control", "public, max-age=86400")
+        else:
+            self.send_header("Cache-Control", "no-store")
         super().end_headers()
 
     def authorized(self):
@@ -122,13 +153,15 @@ class Handler(SimpleHTTPRequestHandler):
         if not blob or len(blob) > MAX_IMAGE:
             self.send_json(400, {"ok": False, "error": "peso"})
             return
+        blob, extension = shrink_photo(blob, extension)
         IMAGES.mkdir(exist_ok=True)
         for old in IMAGES.glob(f"{product_id}.*"):
             if old.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp", ".gif"}:
                 old.unlink()
         destination = IMAGES / f"{product_id}.{extension}"
         destination.write_bytes(blob)
-        self.send_json(200, {"image": f"images/{destination.name}"})
+        version = int(destination.stat().st_mtime)
+        self.send_json(200, {"image": f"images/{destination.name}?v={version}"})
 
 
 if __name__ == "__main__":
