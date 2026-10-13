@@ -132,6 +132,6 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    server = ThreadingHTTPServer(("127.0.0.1", 8765), Handler)
-    print("Oasis en http://127.0.0.1:8765  ·  admin en /admin")
+    server = ThreadingHTTPServer(("0.0.0.0", 3000), Handler)
+    print("Oasis en http://0.0.0.0:3000  ·  admin en /admin")
     server.serve_forever()
