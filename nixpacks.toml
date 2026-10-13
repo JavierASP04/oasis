@@ -2,7 +2,10 @@
 nixPkgs = ["python3", "python3Packages.pip"]
 
 [phases.install]
-cmds = ["pip install -r requirements.txt"]
+cmds = [
+  "python3 -m venv venv",
+  "./venv/bin/pip install -r requirements.txt"
+]
 
 [start]
-cmd = "python3 server.py"
+cmd = "./venv/bin/python server.py"
