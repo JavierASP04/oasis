@@ -189,6 +189,31 @@ legend { padding: 0 6px; color: var(--muted); font-size: 12px; letter-spacing: 0
 
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+.tools {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+}
+
+.tools h2 {
+  margin: 0;
+  font-family: Syne, sans-serif;
+  font-size: 22px;
+}
+
+.tool-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.tool-row button,
+.tool-row .file { margin-top: 0; }
+
 @media (min-width: 800px) {
   .editor-grid { display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start; }
   .photo-field { position: sticky; top: 16px; }

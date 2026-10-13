@@ -139,10 +139,10 @@ function renderCatalog() {
   const noun = items.length === 1 ? "perfume" : "perfumes";
   resultCount.textContent = items.length ? `${items.length} ${noun}` : "";
   empty.hidden = items.length > 0;
-  grid.innerHTML = items.map((product) => `
+  grid.innerHTML = items.map((product, index) => `
     <article class="card">
       <button type="button" class="card-open" data-open="${esc(product.id)}">
-        <span class="photo"><img src="${esc(photoSrc(product))}" alt="Foto de ${esc(product.name)}"></span>
+        <span class="photo"><img src="${esc(photoSrc(product))}" alt="Foto de ${esc(product.name)}" ${index < 4 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"></span>
         <span class="card-copy">
           <span class="brand">${esc(product.brand)}</span>
           <h3>${esc(product.name)}</h3>
@@ -162,7 +162,7 @@ function renderProduct() {
   const familyLabel = FAMILIES.find(([id]) => id === product.family)?.[1] || "";
   productBody.innerHTML = `
     <div class="sheet-photo">
-      <img src="${esc(photoSrc(product))}" alt="Foto de ${esc(product.name)}">
+      <img src="${esc(photoSrc(product))}" alt="Foto de ${esc(product.name)}" decoding="async">
       <button type="button" class="sheet-close" id="close-product">Cerrar</button>
     </div>
     <div class="sheet-body">
@@ -210,7 +210,7 @@ function renderCart() {
     if (!product) return "";
     return `
       <article class="line">
-        <img class="thumb" src="${esc(photoSrc(product))}" alt="">
+        <img class="thumb" src="${esc(photoSrc(product))}" alt="" loading="lazy" decoding="async">
         <div>
           <div class="line-top">
             <h3>${esc(product.name)}</h3>

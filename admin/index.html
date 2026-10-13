@@ -34,6 +34,25 @@
         <button type="button" id="add-product">Nuevo perfume</button>
       </div>
       <div id="product-list" class="product-list"></div>
+      <section class="tools">
+        <h2>Respaldo y carga</h2>
+        <p class="hint">Las fotos se comprimen solas al guardar. Puedes subirlas tal cual desde el teléfono.</p>
+        <div class="tool-row">
+          <button type="button" id="download-backup">Descargar respaldo</button>
+          <label class="file">Restaurar respaldo
+            <input id="restore-backup" type="file" accept=".zip,application/zip">
+          </label>
+        </div>
+        <p class="hint">El respaldo es un zip con catalogo.csv y la carpeta imagenes. Se abre en Excel. Restaurar reemplaza el catálogo.</p>
+        <div class="tool-row">
+          <button type="button" id="download-template" class="ghost">Plantilla CSV</button>
+          <label class="file">Cargar CSV o zip
+            <input id="import-catalog" type="file" accept=".csv,.zip,text/csv,application/zip">
+          </label>
+        </div>
+        <p class="hint">Para varios perfumes, llena la plantilla. Categoría: caballero, dama u otros. Si el archivo trae fotos, van en la carpeta imagenes y la columna foto lleva el nombre del archivo. Esta carga agrega o actualiza, y no borra el resto.</p>
+        <p id="tools-status" class="status" role="status"></p>
+      </section>
     </section>
 
     <section id="editor-view" hidden>
@@ -49,6 +68,7 @@
               Cambiar foto
               <input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
             </label>
+            <p class="hint">Se comprime sola al guardar.</p>
           </div>
           <div class="fields">
             <label>Casa <input name="brand" required></label>
