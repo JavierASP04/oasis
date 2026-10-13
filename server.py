@@ -557,7 +557,6 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", "3000"))
-    server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
-    print(f"Oasis en http://0.0.0.0:{port}  ·  admin en /admin")
+    server = ThreadingHTTPServer(("0.0.0.0", 3000), Handler)
+    print("Oasis en http://0.0.0.0:3000  ·  admin en /admin")
     server.serve_forever()
