@@ -48,6 +48,15 @@
           <button type="button" data-family="dama">Dama</button>
           <button type="button" data-family="otros">Otros</button>
         </div>
+        <label class="sort">
+          <span class="sr-only">Ordenar</span>
+          <select id="sort" aria-label="Ordenar perfumes">
+            <option value="relevantes">Más relevantes</option>
+            <option value="precio-asc">Menor precio</option>
+            <option value="precio-desc">Mayor precio</option>
+            <option value="az">A-Z</option>
+          </select>
+        </label>
         <div class="toolbar-end">
           <input id="search" class="search" type="search" placeholder="Buscar perfume" autocomplete="off" aria-label="Buscar perfume o casa">
           <p id="result-count" class="result-count" aria-live="polite"></p>
