@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Admin · Oasis Tienda</title>
+  <meta name="theme-color" content="#0e2344">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/">Oasis</a>
+    <p>Admin</p>
+    <a class="back" href="/">Ver tienda</a>
+  </header>
+
+  <main id="gate" class="sheet">
+    <h1>Entrar</h1>
+    <p class="hint">Desde aquí cambias precios, fotos y textos del catálogo.</p>
+    <form id="login">
+      <label>Contraseña <input id="password" type="password" autocomplete="current-password" required></label>
+      <button type="submit">Entrar</button>
+      <p id="login-status" class="status" role="status"></p>
+    </form>
+  </main>
+
+  <main id="desk" hidden>
+    <section id="list-view">
+      <div class="list-bar">
+        <h1>Catálogo</h1>
+        <button type="button" id="add-product">Nuevo perfume</button>
+      </div>
+      <div id="product-list" class="product-list"></div>
+    </section>
+
+    <section id="editor-view" hidden>
+      <form id="editor" class="editor">
+        <div class="editor-top">
+          <h1 id="editor-title">Editar</h1>
+          <button type="button" id="cancel" class="ghost">Volver</button>
+        </div>
+        <div class="editor-grid">
+          <div class="photo-field">
+            <div class="photo-frame"><img id="preview" alt=""></div>
+            <label class="file">
+              Cambiar foto
+              <input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+            </label>
+          </div>
+          <div class="fields">
+            <label>Casa <input name="brand" required></label>
+            <label>Nombre <input name="name" required></label>
+            <div class="split">
+              <label>Tamaño <input name="size" placeholder="100 ml" required></label>
+              <label>Precio en $ <input name="price" type="number" min="0" step="0.01" required></label>
+            </div>
+            <label>Categoría
+              <select name="family">
+                <option value="caballero">Caballero</option>
+                <option value="dama">Dama</option>
+                <option value="otros">Otros</option>
+              </select>
+            </label>
+            <label>Notas cortas <input name="accords" placeholder="Dátil, canela y vainilla"></label>
+            <label>Descripción <textarea name="summary" rows="3"></textarea></label>
+            <fieldset>
+              <legend>Pirámide</legend>
+              <div id="notes"></div>
+              <button type="button" id="add-note" class="ghost">Añadir nota</button>
+            </fieldset>
+          </div>
+        </div>
+        <div class="editor-actions">
+          <button type="submit">Guardar</button>
+          <button type="button" id="remove" class="danger">Eliminar</button>
+        </div>
+        <p id="editor-status" class="status" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>
