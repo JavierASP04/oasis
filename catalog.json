@@ -1,11 +1,11 @@
 [
   {
     "id": "khamrah",
-    "brand": "Lattafa",
-    "name": "Khamrah",
+    "brand": "Rome Pour Home",
+    "name": "Rome Pour Home",
     "size": "100 ml",
-    "price": 34,
-    "family": "otros",
+    "price": 40.99,
+    "family": "caballero",
     "accords": "Dátil, canela y vainilla",
     "summary": "Oriental dulce, cálido y especiado. Se nota al entrar y se vuelve más cremoso con el rato.",
     "notes": [
@@ -21,14 +21,15 @@
         "Fondo",
         "Vainilla, haba tonka, ámbar"
       ]
-    ]
+    ],
+    "image": "images/khamrah.jpg"
   },
   {
     "id": "asad",
     "brand": "Lattafa",
     "name": "Asad Elixir",
     "size": "100 ml",
-    "price": 29,
+    "price": 44.99,
     "family": "caballero",
     "accords": "Pimienta, tabaco y ámbar",
     "summary": "Especiado y oscuro, con tabaco y un fondo ambarado. Encaja de noche.",
@@ -53,56 +54,57 @@
     "brand": "Lattafa",
     "name": "Yara Elixir",
     "size": "100 ml",
-    "price": 28,
+    "price": 45.99,
     "family": "dama",
     "accords": "Orquídea, fruta tropical y vainilla",
-    "summary": "Floral cremoso, suave y con estela. Fácil de llevar a diario.",
+    "summary": "Aroma gourmand intenso y dulce, que combina fresas acarameladas, notas florales y un fondo de vainilla y ámbar.",
     "notes": [
       [
         "Salida",
-        "Orquídea, mandarina, heliotropo"
+        "S'mores de fresa (fresa acaramelada/tostada) y grosella negra."
       ],
       [
         "Corazón",
-        "Notas tropicales"
+        "Jazmín y flor de azahar del naranjo."
       ],
       [
         "Fondo",
-        "Vainilla, almizcle, sándalo"
+        "Vainilla, caramelo, ámbar y almizcle."
       ]
     ],
     "image": "images/yara.jpg"
   },
   {
     "id": "mayar",
-    "brand": "Lattafa",
-    "name": "Mayar",
+    "brand": "Mandarin Sky Elixir",
+    "name": "Mandarin Sky Elixir",
     "size": "100 ml",
-    "price": 32,
-    "family": "dama",
+    "price": 51.99,
+    "family": "caballero",
     "accords": "Melocotón, rosa y vainilla",
-    "summary": "Floral afrutado, luminoso y claramente femenino.",
+    "summary": "Cálida, especiada, dulce y amaderada, centrada en notas de mandarina, caramelo y vainilla",
     "notes": [
       [
         "Salida",
-        "Melocotón, frambuesa, lichi"
+        "Mandarina, naranja, lavanda, cardamomo y pimienta negra."
       ],
       [
         "Corazón",
-        "Rosa, jazmín, azahar"
+        "Caramelo, haba tonka, incienso y pachulí."
       ],
       [
         "Fondo",
-        "Vainilla, almizcle, ámbar"
+        "Vainilla y vetiver."
       ]
-    ]
+    ],
+    "image": "images/mayar.jpg"
   },
   {
     "id": "oud-for-glory",
-    "brand": "Lattafa",
-    "name": "Oud for Glory",
+    "brand": "Armaf",
+    "name": "Beach Party",
     "size": "100 ml",
-    "price": 31,
+    "price": 48.99,
     "family": "caballero",
     "accords": "Azafrán, oud y vainilla",
     "summary": "Oud pulido, con azafrán y lavanda al inicio. Elegante, sin exceso de dulzor.",
@@ -119,14 +121,15 @@
         "Fondo",
         "Pachulí, vainilla"
       ]
-    ]
+    ],
+    "image": "images/oud-for-glory.jpg"
   },
   {
     "id": "hawas",
     "brand": "Rasasi",
-    "name": "Hawas",
+    "name": "Qaed Al fursan",
     "size": "100 ml",
-    "price": 42,
+    "price": 25.99,
     "family": "caballero",
     "accords": "Manzana, canela y notas acuáticas",
     "summary": "Fresco y juvenil. Manzana especiada sobre un fondo limpio.",
@@ -143,14 +146,15 @@
         "Fondo",
         "Ámbar gris, almizcle, maderas"
       ]
-    ]
+    ],
+    "image": "images/hawas.jpg"
   },
   {
     "id": "la-yuqawam",
     "brand": "Rasasi",
-    "name": "La Yuqawam",
+    "name": "Hayati Men EDP",
     "size": "75 ml",
-    "price": 48,
+    "price": 24.99,
     "family": "caballero",
     "accords": "Frambuesa, cuero y oud",
     "summary": "Cuero y frambuesa con azafrán. El más serio de la selección.",
@@ -167,15 +171,16 @@
         "Fondo",
         "Oud, ámbar, maderas"
       ]
-    ]
+    ],
+    "image": "images/la-yuqawam.png"
   },
   {
     "id": "amber-oud-gold",
-    "brand": "Al Haramain",
-    "name": "Amber Oud Gold",
-    "size": "60 ml",
-    "price": 62,
-    "family": "otros",
+    "brand": "Nitro Red",
+    "name": "Nitro Red",
+    "size": "100 ml",
+    "price": 44.99,
+    "family": "caballero",
     "accords": "Ámbar, almizcle y vainilla",
     "summary": "Ámbar dulce con un punto frutal. Gana presencia con el calor.",
     "notes": [
@@ -191,15 +196,16 @@
         "Fondo",
         "Almizcle, vainilla, cedro"
       ]
-    ]
+    ],
+    "image": "images/amber-oud-gold.jpg"
   },
   {
     "id": "laventure",
-    "brand": "Al Haramain",
-    "name": "L'Aventure",
+    "brand": "Lataffa",
+    "name": "Victoria Edp",
     "size": "100 ml",
-    "price": 36,
-    "family": "caballero",
+    "price": 53.99,
+    "family": "dama",
     "accords": "Limón, jazmín y almizcle",
     "summary": "Cítrico de salida y almizcle limpio al secar. Pensado para el día.",
     "notes": [
@@ -215,39 +221,41 @@
         "Fondo",
         "Almizcle, maderas"
       ]
-    ]
+    ],
+    "image": "images/laventure.jpg"
   },
   {
     "id": "9pm",
-    "brand": "Afnan",
-    "name": "9 PM",
+    "brand": "Voyage",
+    "name": "Nautica Voyage",
     "size": "100 ml",
-    "price": 35,
+    "price": 27.99,
     "family": "caballero",
     "accords": "Manzana, canela y vainilla",
-    "summary": "Dulce de noche, con manzana especiada y un fondo de vainilla.",
+    "summary": "Aroma acuático y fresco con manzana verde crujiente, ideal para el día a día y climas cálidos.",
     "notes": [
       [
         "Salida",
-        "Manzana, canela, lavanda"
+        "Manzana verde y hojas verdes"
       ],
       [
         "Corazón",
-        "Flor de azahar"
+        "Flor de loto y mismosa"
       ],
       [
         "Fondo",
-        "Vainilla, haba tonka, ámbar"
+        "Almizcle, cedro, musgo de roble y ambar"
       ]
-    ]
+    ],
+    "image": "images/9pm.jpg"
   },
   {
     "id": "supremacy-noi",
-    "brand": "Afnan",
-    "name": "Supremacy NOI",
+    "brand": "H",
+    "name": "Hayaati Florence",
     "size": "100 ml",
-    "price": 45,
-    "family": "caballero",
+    "price": 24.99,
+    "family": "dama",
     "accords": "Piña, abedul y almizcle",
     "summary": "Fresco amaderado, seco y con carácter. Piña al inicio, musgo al final.",
     "notes": [
@@ -263,30 +271,282 @@
         "Fondo",
         "Almizcle, musgo, ámbar gris"
       ]
-    ]
+    ],
+    "image": "images/supremacy-noi.jpg"
   },
   {
     "id": "shaghaf-oud",
-    "brand": "Swiss Arabian",
-    "name": "Shaghaf Oud",
-    "size": "75 ml",
-    "price": 52,
+    "brand": "Now",
+    "name": "Rave Women",
+    "size": "100 ml",
+    "price": 34.99,
     "family": "dama",
-    "accords": "Rosa, azafrán y praliné",
-    "summary": "Rosa dulce sobre oud. Intenso y muy reconocible.",
+    "accords": "Frutas rojas y naranja",
+    "summary": "Caracterizado olor frutal y Gourmand (dulce) con notas acarameladas y de frutos rojos",
     "notes": [
       [
         "Salida",
-        "Rosa, azafrán"
+        "Frutas rojas, naranja"
       ],
       [
         "Corazón",
-        "Oud, praliné"
+        "Malvavisco, jazmín y lirio de los valles"
       ],
       [
         "Fondo",
         "Vainilla, almizcle"
       ]
-    ]
+    ],
+    "image": "images/shaghaf-oud.png"
+  },
+  {
+    "id": "issey-miyake-l-eau-dissey-pour-homme",
+    "brand": "Issey",
+    "name": "Issey Miyake L'EAU DISSEY POUR HOMME",
+    "size": "75 ml",
+    "price": 44.99,
+    "family": "caballero",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/issey-miyake-l-eau-dissey-pour-homme.jpg"
+  },
+  {
+    "id": "rome-extradose-women",
+    "brand": "Rome Extradose",
+    "name": "Rome Extradose Women",
+    "size": "100 ml",
+    "price": 40.99,
+    "family": "dama",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/rome-extradose-women.jpg"
+  },
+  {
+    "id": "fakhar-black",
+    "brand": "Fakhar Black",
+    "name": "Fakhar Black",
+    "size": "100 ml",
+    "price": 36.99,
+    "family": "caballero",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/fakhar-black.jpg"
+  },
+  {
+    "id": "mayar-2",
+    "brand": "Mayar",
+    "name": "Mayar",
+    "size": "100 ml",
+    "price": 28.99,
+    "family": "dama",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/mayar-2.jpg"
+  },
+  {
+    "id": "odissey-homme",
+    "brand": "Armaf",
+    "name": "Odissey Homme",
+    "size": "100 ml",
+    "price": 38.99,
+    "family": "caballero",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/odissey-homme.jpg"
+  },
+  {
+    "id": "lataffa-suqraat",
+    "brand": "Lataffa",
+    "name": "Lataffa Suqraat",
+    "size": "100 ml",
+    "price": 30.99,
+    "family": "caballero",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/lataffa-suqraat.jpg"
+  },
+  {
+    "id": "bade-e-al-oud",
+    "brand": "Bade'e al oud",
+    "name": "Bade'e al oud",
+    "size": "100 ml",
+    "price": 35.99,
+    "family": "dama",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/bade-e-al-oud.jpg"
+  },
+  {
+    "id": "bharara-king",
+    "brand": "Bharara King",
+    "name": "Bharara King",
+    "size": "100 ml",
+    "price": 68.99,
+    "family": "caballero",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/bharara-king.jpg"
+  },
+  {
+    "id": "odissey-candee",
+    "brand": "Odissey Candee",
+    "name": "Odissey Candee",
+    "size": "100 ml",
+    "price": 30.99,
+    "family": "dama",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/odissey-candee.jpg"
+  },
+  {
+    "id": "oddisey-artisto",
+    "brand": "Oddisey Artisto",
+    "name": "Oddisey Artisto",
+    "size": "100 ml",
+    "price": 45.99,
+    "family": "caballero",
+    "accords": "",
+    "summary": "",
+    "notes": [
+      [
+        "Salida",
+        ""
+      ],
+      [
+        "Corazón",
+        ""
+      ],
+      [
+        "Fondo",
+        ""
+      ]
+    ],
+    "image": "images/oddisey-artisto.jpg"
   }
 ]
