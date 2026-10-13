@@ -27,6 +27,7 @@ const empty = document.getElementById("empty");
 const resultCount = document.getElementById("result-count");
 const search = document.getElementById("search");
 const filters = document.getElementById("filters");
+const sortEl = document.getElementById("sort");
 const overlay = document.getElementById("overlay");
 const productEl = document.getElementById("product");
 const productBody = document.getElementById("product-body");
@@ -43,6 +44,7 @@ const live = document.getElementById("live");
 
 let family = "todos";
 let query = "";
+let sort = "relevantes";
 let detailId = null;
 let detailQty = 1;
 let cart = loadCart();
@@ -115,13 +117,21 @@ function setQty(id, qty) {
   renderCart();
 }
 
+function byName(a, b) {
+  return a.name.localeCompare(b.name, "es", { sensitivity: "base" });
+}
+
 function visibleProducts() {
   const q = norm(query.trim());
-  return PRODUCTS.filter((product) => {
+  const items = PRODUCTS.filter((product) => {
     const familyOk = family === "todos" || product.family === family;
     const blob = norm(`${product.brand} ${product.name} ${product.accords}`);
     return familyOk && (!q || blob.includes(q));
   });
+  if (sort === "precio-asc") items.sort((a, b) => a.price - b.price || byName(a, b));
+  else if (sort === "precio-desc") items.sort((a, b) => b.price - a.price || byName(a, b));
+  else if (sort === "az") items.sort(byName);
+  return items;
 }
 
 function renderFilters() {
@@ -337,6 +347,11 @@ filters.addEventListener("click", (event) => {
 
 search.addEventListener("input", () => {
   query = search.value;
+  renderCatalog();
+});
+
+sortEl.addEventListener("change", () => {
+  sort = sortEl.value;
   renderCatalog();
 });
 
