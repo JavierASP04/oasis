@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ventas · Oasis Tienda</title>
+  <meta name="theme-color" content="#0e2344">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/">Oasis</a>
+    <p>Ventas</p>
+    <a class="back" href="/admin">Catálogo</a>
+    <a class="back" href="/">Ver tienda</a>
+  </header>
+
+  <main id="gate" class="sheet">
+    <h1>Entrar</h1>
+    <p class="hint">El registro de ventas usa la misma contraseña del admin.</p>
+    <form id="login">
+      <label>Contraseña <input id="password" type="password" autocomplete="current-password" required></label>
+      <button type="submit">Entrar</button>
+      <p id="login-status" class="status" role="status"></p>
+    </form>
+  </main>
+
+  <main id="desk" class="sheet" hidden>
+    <h1>Registrar venta</h1>
+    <form id="sale">
+      <label>Nombre <input name="name" required maxlength="80" autocomplete="name"></label>
+      <label>Perfume
+        <select name="productId" required>
+          <option value="">Elige un perfume</option>
+        </select>
+      </label>
+      <div class="split">
+        <label>Cantidad <input name="qty" type="number" min="1" max="20" value="1" required></label>
+        <label>Método de pago
+          <select name="method" required>
+            <option value="bcv">BCV</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="usdt">USDT</option>
+          </select>
+        </label>
+      </div>
+      <div class="split">
+        <label>Modalidad
+          <select name="mode" required>
+            <option value="contado">Al contado</option>
+            <option value="cuotas">Cuotas</option>
+          </select>
+        </label>
+        <label id="installments-field" hidden>Número de cuotas
+          <input name="installments" type="number" min="2" max="24" value="2">
+        </label>
+      </div>
+      <p id="total" class="hint"></p>
+      <label>Notas <textarea name="notes" rows="3" maxlength="500" placeholder="Abono, referencia o lo que quieras anotar"></textarea></label>
+      <button type="submit">Registrar venta</button>
+      <p id="sale-status" class="status" role="status"></p>
+    </form>
+
+    <section>
+      <h2 class="list-title">Registradas</h2>
+      <div id="sales"></div>
+      <p id="empty" class="hint">Todavía no hay ventas.</p>
+    </section>
+  </main>
+  <script src="/admin/ventas.js"></script>
+</body>
+</html>
