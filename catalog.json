@@ -548,5 +548,80 @@
       ]
     ],
     "image": "images/oddisey-artisto.jpg"
+  },
+  {
+    "id": "club-de-nuit-urban-man",
+    "brand": "Armaf",
+    "name": "Club de Nuit Urban Man",
+    "size": "105 ml",
+    "price": 35.99,
+    "family": "caballero",
+    "accords": "Bergamota, menta y maderas",
+    "summary": "Fresco y amaderado. Bergamota y menta al entrar, lavanda en el centro y sándalo al secar.",
+    "notes": [
+      [
+        "Salida",
+        "Bergamota, menta, toronja y cardamomo"
+      ],
+      [
+        "Corazón",
+        "Jengibre, lavanda, cedro y nuez moscada"
+      ],
+      [
+        "Fondo",
+        "Pachulí, vetiver, sándalo y musgo de roble"
+      ]
+    ],
+    "image": "images/club-de-nuit-urban-man.svg"
+  },
+  {
+    "id": "club-de-nuit-intense",
+    "brand": "Armaf",
+    "name": "Club de Nuit Intense Man",
+    "size": "105 ml",
+    "price": 44.9,
+    "family": "caballero",
+    "accords": "Limón, piña y abedul",
+    "summary": "Cítrico y ahumado. Piña y limón al entrar, abedul en el centro y vainilla al secar.",
+    "notes": [
+      [
+        "Salida",
+        "Limón, piña, bergamota, grosella negra y manzana"
+      ],
+      [
+        "Corazón",
+        "Abedul, jazmín y rosa"
+      ],
+      [
+        "Fondo",
+        "Almizcle, ámbar gris, pachulí y vainilla"
+      ]
+    ],
+    "image": "images/club-de-nuit-intense.svg"
+  },
+  {
+    "id": "blue-seduction",
+    "brand": "Antonio Banderas",
+    "name": "Blue Seduction",
+    "size": "100 ml",
+    "price": 29.99,
+    "family": "caballero",
+    "accords": "Menta, manzana y notas marinas",
+    "summary": "Fresco y acuático. Menta y melón al entrar, manzana y agua de mar en el centro.",
+    "notes": [
+      [
+        "Salida",
+        "Melón, bergamota, menta y grosella negra"
+      ],
+      [
+        "Corazón",
+        "Notas marinas, manzana verde, cardamomo y nuez moscada"
+      ],
+      [
+        "Fondo",
+        "Maderas y ámbar"
+      ]
+    ],
+    "image": "images/blue-seduction.svg"
   }
 ]

@@ -3,6 +3,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import base64
 import csv
+from datetime import datetime
 import io
 import json
 import os
@@ -12,6 +13,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent
 CATALOG = ROOT / "catalog.json"
+SALES = ROOT / "sales.json"
 IMAGES = ROOT / "images"
 # Cámbiala antes de publicar la tienda.
 ADMIN_PASSWORD = "oasis"
@@ -116,6 +118,75 @@ def write_products(products):
         json.dumps(products, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+PAY_METHODS = {"bcv": "BCV", "efectivo": "Efectivo", "usdt": "USDT"}
+PAY_MODES = {"contado": "Al contado", "cuotas": "Cuotas"}
+
+
+def load_sales():
+    if not SALES.exists():
+        return []
+    try:
+        data = json.loads(SALES.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+    return data if isinstance(data, list) else []
+
+
+def write_sales(sales):
+    SALES.write_text(
+        json.dumps(sales, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def record_sale(payload):
+    name = str(payload.get("name", "")).strip()
+    product_id = str(payload.get("productId", "")).strip()
+    method = str(payload.get("method", "")).strip()
+    mode = str(payload.get("mode", "")).strip()
+    notes = str(payload.get("notes", "")).strip()
+    try:
+        qty = int(payload.get("qty", 1))
+    except (TypeError, ValueError):
+        qty = 0
+    installments = 1
+    if mode == "cuotas":
+        try:
+            installments = int(payload.get("installments", 0))
+        except (TypeError, ValueError):
+            installments = 0
+    if not name or len(name) > 80 or method not in PAY_METHODS or mode not in PAY_MODES:
+        raise ValueError("datos")
+    if qty < 1 or qty > 20:
+        raise ValueError("cantidad")
+    if mode == "cuotas" and not 2 <= installments <= 24:
+        raise ValueError("cuotas")
+    product = next((item for item in load_products() if item.get("id") == product_id), None)
+    if not product:
+        raise ValueError("perfume")
+    price = round(float(product.get("price") or 0), 2)
+    sale = {
+        "id": datetime.now().strftime("%Y%m%d%H%M%S%f"),
+        "at": datetime.now().astimezone().isoformat(timespec="minutes"),
+        "name": name,
+        "productId": product_id,
+        "product": product.get("name") or "",
+        "brand": product.get("brand") or "",
+        "size": product.get("size") or "",
+        "price": price,
+        "qty": qty,
+        "total": round(price * qty, 2),
+        "method": method,
+        "mode": mode,
+        "installments": installments if mode == "cuotas" else 1,
+        "notes": notes[:500],
+    }
+    sales = load_sales()
+    sales.append(sale)
+    write_sales(sales)
+    return sale
 
 
 def note_parts(product):
@@ -469,6 +540,19 @@ class Handler(SimpleHTTPRequestHandler):
             return
         if path in ("/admin", "/admin/"):
             self.path = "/admin/index.html"
+        if path in ("/admin/ventas", "/admin/ventas/"):
+            self.path = "/admin/ventas.html"
+        if path == "/sales.json":
+            self.send_error(404)
+            return
+        if path == "/api/admin/sales":
+            if not self.authorized():
+                self.send_json(401, {"ok": False})
+                return
+            sales = load_sales()
+            sales.reverse()
+            self.send_json(200, sales)
+            return
         super().do_GET()
 
     def do_PUT(self):
@@ -512,8 +596,40 @@ class Handler(SimpleHTTPRequestHandler):
             return
         self.send_json(200, {"ok": True, "count": len(products)})
 
+    def do_DELETE(self):
+        if self.path_only() != "/api/admin/sales":
+            self.send_error(404)
+            return
+        if not self.authorized():
+            self.send_json(401, {"ok": False})
+            return
+        try:
+            payload = self.read_json()
+        except json.JSONDecodeError:
+            self.send_json(400, {"ok": False})
+            return
+        sale_id = str(payload.get("id", ""))
+        sales = [item for item in load_sales() if item.get("id") != sale_id]
+        write_sales(sales)
+        self.send_json(200, {"ok": True})
+
     def do_POST(self):
         path = self.path_only()
+        if path == "/api/admin/sales":
+            if not self.authorized():
+                self.send_json(401, {"ok": False})
+                return
+            try:
+                payload = self.read_json()
+                sale = record_sale(payload)
+            except json.JSONDecodeError:
+                self.send_json(400, {"ok": False})
+                return
+            except ValueError as error:
+                self.send_json(400, {"ok": False, "error": str(error)})
+                return
+            self.send_json(200, sale)
+            return
         if path == "/api/admin/restore":
             self.receive_table(True)
             return
