@@ -11,6 +11,8 @@
 
 * { box-sizing: border-box; }
 
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   font-family: Outfit, "Segoe UI", sans-serif;
@@ -213,6 +215,34 @@ legend { padding: 0 6px; color: var(--muted); font-size: 12px; letter-spacing: 0
 
 .tool-row button,
 .tool-row .file { margin-top: 0; }
+
+.list-title {
+  margin: 28px 0 0;
+  font-family: Syne, sans-serif;
+  font-size: 22px;
+}
+
+.sale {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--card);
+}
+
+.sale strong { font-family: Syne, sans-serif; font-size: 18px; }
+
+.sale p { color: var(--muted); font-size: 14px; }
+
+.sale .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sale button { margin-top: 0; }
 
 @media (min-width: 800px) {
   .editor-grid { display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start; }
