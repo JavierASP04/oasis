@@ -1,0 +1,225 @@
+.ventas {
+  width: min(1100px, calc(100% - 28px));
+  margin: 20px auto 56px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stats article {
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--navy);
+  color: #f4f7fb;
+}
+
+.stats span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.stats strong {
+  display: block;
+  margin-top: 6px;
+  font-family: Syne, sans-serif;
+  font-size: 22px;
+}
+
+.ventas-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.ticket, .ledger, .sale {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+}
+
+.ticket h1, .ledger h2, .sale h3 {
+  font-family: Syne, sans-serif;
+}
+
+.choice-label {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.choices, .filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choices { margin-top: 8px; }
+
+.choices button, .filters button, .sale .pay button {
+  margin: 0;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.choices button[aria-pressed="true"],
+.filters button[aria-pressed="true"] {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #f4f7fb;
+}
+
+form .check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: end;
+  margin-top: 12px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.check input { width: auto; margin: 0; }
+
+.plan {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plan li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.total {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.total:empty { display: none; }
+.total:has(span:only-child) { grid-template-columns: 1fr; }
+
+.total span {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 14px;
+  background: #f7f1e7;
+}
+
+.total small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.total b {
+  font-family: Syne, sans-serif;
+  font-size: 18px;
+}
+
+.ledger-top {
+  display: grid;
+  gap: 10px;
+}
+
+.ledger-top h2 { margin: 0; font-size: 26px; }
+
+.filters { margin-top: 12px; }
+
+.sale { margin-top: 12px; }
+
+.sale-head, .pay-line, .sale .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.sale h3 { margin: 0; font-size: 20px; }
+
+.badge {
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #efe4d2;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.due { background: #f3dfc4; color: #6a4214; }
+.badge.ok { background: #e3eee8; color: var(--green); }
+
+.meta { margin-top: 4px; color: var(--muted); font-size: 14px; }
+
+.bar {
+  height: 8px;
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #efe4d2;
+}
+
+.bar span { display: block; height: 100%; background: var(--green); }
+
+.payments { margin: 12px 0 0; padding: 0; list-style: none; }
+
+.payments li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.pay {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.pay .split { margin: 0; }
+
+.sale .pay button[type="submit"] {
+  border-color: transparent;
+  background: var(--green);
+  color: #f4f7fb;
+}
+
+.sale .danger { margin-top: 12px; }
+
+@media (min-width: 900px) {
+  .ventas-grid { grid-template-columns: minmax(340px, 420px) 1fr; align-items: start; }
+  .ticket {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow: auto;
+  }
+  .stats strong { font-size: 28px; }
+}

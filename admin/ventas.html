@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="stylesheet" href="/admin/ventas.css">
 </head>
 <body>
   <header class="top">
@@ -28,47 +29,67 @@
     </form>
   </main>
 
-  <main id="desk" class="sheet" hidden>
-    <h1>Registrar venta</h1>
-    <form id="sale">
-      <label>Nombre <input name="name" required maxlength="80" autocomplete="name"></label>
-      <label>Perfume
-        <select name="productId" required>
-          <option value="">Elige un perfume</option>
-        </select>
-      </label>
-      <div class="split">
-        <label>Cantidad <input name="qty" type="number" min="1" max="20" value="1" required></label>
-        <label>Método de pago
-          <select name="method" required>
-            <option value="bcv">BCV</option>
-            <option value="efectivo">Efectivo</option>
-            <option value="usdt">USDT</option>
-          </select>
-        </label>
-      </div>
-      <div class="split">
-        <label>Modalidad
-          <select name="mode" required>
-            <option value="contado">Al contado</option>
-            <option value="cuotas">Cuotas</option>
-          </select>
-        </label>
-        <label id="installments-field" hidden>Número de cuotas
-          <input name="installments" type="number" min="2" max="24" value="2">
-        </label>
-      </div>
-      <p id="total" class="hint"></p>
-      <label>Notas <textarea name="notes" rows="3" maxlength="500" placeholder="Abono, referencia o lo que quieras anotar"></textarea></label>
-      <button type="submit">Registrar venta</button>
-      <p id="sale-status" class="status" role="status"></p>
-    </form>
-
-    <section>
-      <h2 class="list-title">Registradas</h2>
-      <div id="sales"></div>
-      <p id="empty" class="hint">Todavía no hay ventas.</p>
+  <main id="desk" class="ventas" hidden>
+    <section class="stats" aria-label="Resumen">
+      <article><span>Por cobrar</span><strong id="stat-due">$0,00</strong></article>
+      <article><span>Cobrado</span><strong id="stat-paid">$0,00</strong></article>
+      <article><span>Ventas</span><strong id="stat-count">0</strong></article>
     </section>
+
+    <div class="ventas-grid">
+      <form id="sale" class="ticket">
+        <h1>Nueva venta</h1>
+        <label>Cliente <input name="name" required maxlength="80" autocomplete="name" placeholder="Nombre de la persona"></label>
+        <label>Perfume
+          <input id="product-search" type="search" placeholder="Buscar perfume" autocomplete="off">
+          <select name="productId" required>
+            <option value="">Elige un perfume</option>
+          </select>
+        </label>
+        <label>Cantidad <input name="qty" type="number" min="1" max="20" value="1" required></label>
+
+        <p class="choice-label">Método de pago</p>
+        <div class="choices" id="method-choices">
+          <button type="button" data-method="bcv" aria-pressed="true">BCV</button>
+          <button type="button" data-method="efectivo">Efectivo</button>
+          <button type="button" data-method="usdt">USDT</button>
+        </div>
+        <input type="hidden" name="method" value="bcv">
+
+        <p class="choice-label">Modalidad</p>
+        <div class="choices" id="mode-choices">
+          <button type="button" data-mode="contado" aria-pressed="true">Al contado</button>
+          <button type="button" data-mode="cuotas">Cuotas</button>
+        </div>
+        <input type="hidden" name="mode" value="contado">
+
+        <div id="plan-fields" hidden>
+          <label>Número de cuotas <input name="installments" type="number" min="2" max="24" value="3"></label>
+          <label class="check"><input name="collectFirst" type="checkbox" checked> Cobrar la primera ahora</label>
+          <ol id="plan" class="plan"></ol>
+        </div>
+
+        <p id="total" class="total"></p>
+        <label>Notas <textarea name="notes" rows="3" maxlength="500" placeholder="Referencia, abono o lo que quieras anotar"></textarea></label>
+        <button type="submit">Registrar venta</button>
+        <p id="sale-status" class="status" role="status"></p>
+      </form>
+
+      <section class="ledger">
+        <div class="ledger-top">
+          <h2>Registro</h2>
+          <input id="find" type="search" placeholder="Buscar cliente o perfume" autocomplete="off">
+        </div>
+        <div class="filters" id="filters">
+          <button type="button" data-filter="todas" aria-pressed="true">Todas</button>
+          <button type="button" data-filter="cobrar">Por cobrar</button>
+          <button type="button" data-filter="cuotas">Cuotas</button>
+          <button type="button" data-filter="contado">Contado</button>
+        </div>
+        <div id="sales"></div>
+        <p id="empty" class="hint">Todavía no hay ventas con este filtro.</p>
+      </section>
+    </div>
   </main>
   <script src="/admin/ventas.js"></script>
 </body>

@@ -27,6 +27,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .top {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   min-height: 64px;
   padding: 8px 16px;

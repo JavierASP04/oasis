@@ -9,6 +9,7 @@ import json
 import os
 import re
 import unicodedata
+import uuid
 import zipfile
 
 ROOT = Path(__file__).resolve().parent
@@ -141,6 +142,53 @@ def write_sales(sales):
     )
 
 
+def money_parts(total, parts):
+    cents = int(round(float(total) * 100))
+    base, extra = divmod(cents, parts)
+    return [round((base + (1 if index < extra else 0)) / 100, 2) for index in range(parts)]
+
+
+def payment_entry(amount, method, note):
+    return {
+        "id": uuid.uuid4().hex[:12],
+        "at": datetime.now().astimezone().isoformat(timespec="minutes"),
+        "amount": round(float(amount), 2),
+        "method": method,
+        "note": str(note or "")[:200],
+    }
+
+
+def paid_amount(sale):
+    payments = sale.get("payments")
+    if isinstance(payments, list):
+        return round(sum(float(item.get("amount") or 0) for item in payments), 2)
+    if sale.get("mode") == "cuotas":
+        return 0.0
+    return round(float(sale.get("total") or 0), 2)
+
+
+def present_sale(sale):
+    total = round(float(sale.get("total") or 0), 2)
+    paid = min(total, paid_amount(sale))
+    view = dict(sale)
+    payments = sale.get("payments")
+    if not isinstance(payments, list):
+        payments = []
+        if sale.get("mode") != "cuotas" and total:
+            payments = [{
+                "id": "inicial",
+                "at": sale.get("at"),
+                "amount": total,
+                "method": sale.get("method") or "efectivo",
+                "note": "",
+            }]
+    view["payments"] = payments
+    view["paid"] = paid
+    view["balance"] = round(total - paid, 2)
+    view["installments"] = int(sale.get("installments") or (1 if sale.get("mode") != "cuotas" else 2))
+    return view
+
+
 def record_sale(payload):
     name = str(payload.get("name", "")).strip()
     product_id = str(payload.get("productId", "")).strip()
@@ -167,8 +215,13 @@ def record_sale(payload):
     if not product:
         raise ValueError("perfume")
     price = round(float(product.get("price") or 0), 2)
+    total = round(price * qty, 2)
+    amounts = money_parts(total, installments if mode == "cuotas" else 1)
+    payments = []
+    if mode != "cuotas" or payload.get("collectFirst"):
+        payments.append(payment_entry(amounts[0], method, "Cuota 1" if mode == "cuotas" else ""))
     sale = {
-        "id": datetime.now().strftime("%Y%m%d%H%M%S%f"),
+        "id": uuid.uuid4().hex[:12],
         "at": datetime.now().astimezone().isoformat(timespec="minutes"),
         "name": name,
         "productId": product_id,
@@ -177,16 +230,50 @@ def record_sale(payload):
         "size": product.get("size") or "",
         "price": price,
         "qty": qty,
-        "total": round(price * qty, 2),
+        "total": total,
         "method": method,
         "mode": mode,
         "installments": installments if mode == "cuotas" else 1,
+        "plan": amounts,
+        "payments": payments,
         "notes": notes[:500],
     }
     sales = load_sales()
     sales.append(sale)
     write_sales(sales)
-    return sale
+    return present_sale(sale)
+
+
+def add_payment(payload):
+    sale_id = str(payload.get("saleId", "")).strip()
+    method = str(payload.get("method", "")).strip()
+    note = str(payload.get("note", "")).strip()
+    try:
+        amount = round(float(payload.get("amount", 0)), 2)
+    except (TypeError, ValueError):
+        amount = 0
+    if method not in PAY_METHODS or amount <= 0:
+        raise ValueError("monto")
+    sales = load_sales()
+    sale = next((item for item in sales if item.get("id") == sale_id), None)
+    if not sale:
+        raise ValueError("venta")
+    balance = round(float(sale.get("total") or 0) - paid_amount(sale), 2)
+    if not isinstance(sale.get("payments"), list):
+        sale["payments"] = []
+        if sale.get("mode") != "cuotas" and sale.get("total"):
+            sale["payments"].append({
+                "id": "inicial",
+                "at": sale.get("at"),
+                "amount": round(float(sale.get("total") or 0), 2),
+                "method": sale.get("method") or "efectivo",
+                "note": "",
+            })
+    if amount - balance > 0.001:
+        raise ValueError("saldo")
+    sale["payments"].append(payment_entry(amount, method, note))
+    write_sales(sales)
+    return present_sale(sale)
 
 
 def note_parts(product):
@@ -549,7 +636,7 @@ class Handler(SimpleHTTPRequestHandler):
             if not self.authorized():
                 self.send_json(401, {"ok": False})
                 return
-            sales = load_sales()
+            sales = [present_sale(item) for item in load_sales()]
             sales.reverse()
             self.send_json(200, sales)
             return
@@ -615,13 +702,13 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         path = self.path_only()
-        if path == "/api/admin/sales":
+        if path in {"/api/admin/sales", "/api/admin/sales/pago"}:
             if not self.authorized():
                 self.send_json(401, {"ok": False})
                 return
             try:
                 payload = self.read_json()
-                sale = record_sale(payload)
+                sale = add_payment(payload) if path.endswith("/pago") else record_sale(payload)
             except json.JSONDecodeError:
                 self.send_json(400, {"ok": False})
                 return
