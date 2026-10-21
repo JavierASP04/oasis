@@ -101,13 +101,47 @@ form .check {
 }
 
 .plan li {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  display: block;
   padding: 8px 0;
   border-top: 1px solid var(--line);
-  font-size: 14px;
 }
+
+.plan label, .edit label {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.plan label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+}
+
+.plan input { width: 112px; margin: 0; }
+
+#catalog-price {
+  display: block;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.sale .edit-toggle { margin-top: 12px; }
+
+.edit {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.edit .split { margin: 0; }
+.edit button { margin: 0; }
 
 .total {
   display: grid;

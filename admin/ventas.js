@@ -8,6 +8,8 @@ const ERRORS = {
   monto: "Escribe un monto válido.",
   saldo: "Ese abono pasa el saldo pendiente.",
   venta: "No encontré esa venta.",
+  pagado: "El total no puede ser menor de lo ya cobrado.",
+  plan: "Las cuotas tienen que sumar el total.",
 };
 
 const gate = document.getElementById("gate");
@@ -18,6 +20,7 @@ const productSearch = document.getElementById("product-search");
 const planFields = document.getElementById("plan-fields");
 const plan = document.getElementById("plan");
 const total = document.getElementById("total");
+const catalogPrice = document.getElementById("catalog-price");
 const status = document.getElementById("sale-status");
 const salesBox = document.getElementById("sales");
 const empty = document.getElementById("empty");
@@ -49,11 +52,43 @@ function when(value) {
   return date.toLocaleString("es-VE", { dateStyle: "medium", timeStyle: "short" });
 }
 
+function cents(value) {
+  return Math.round((Number(value) || 0) * 100);
+}
+
 function parts(amount, count) {
-  const cents = Math.round(amount * 100);
-  const base = Math.floor(cents / count);
-  const extra = cents % count;
+  const totalCents = cents(amount);
+  const base = Math.floor(totalCents / count);
+  const extra = totalCents % count;
   return Array.from({ length: count }, (_, index) => (base + (index < extra ? 1 : 0)) / 100);
+}
+
+function planInputs(amounts, firstNow) {
+  return amounts.map((part, index) => `
+    <li>
+      <label>Cuota ${index + 1}${index === 0 && firstNow ? " · ahora" : ""}
+        <input data-part="${index}" type="number" min="0.01" step="0.01" inputmode="decimal" value="${part.toFixed(2)}" required>
+      </label>
+    </li>
+  `).join("");
+}
+
+function readParts(container) {
+  return [...container.querySelectorAll("[data-part]")].map((input) => Number(input.value));
+}
+
+function balanceLastPart(container, totalValue) {
+  const inputs = [...container.querySelectorAll("[data-part]")];
+  if (inputs.length < 2) return true;
+  const used = inputs.slice(0, -1).reduce((sum, input) => sum + cents(input.value), 0);
+  const rest = cents(totalValue) - used;
+  inputs[inputs.length - 1].value = (rest / 100).toFixed(2);
+  return rest > 0;
+}
+
+function partsMatch(container, totalValue) {
+  const sum = readParts(container).reduce((sum, part) => sum + cents(part), 0);
+  return sum === cents(totalValue);
 }
 
 async function api(path, options = {}) {
@@ -83,31 +118,70 @@ function fillProducts() {
     <option value="${esc(product.id)}">${esc(product.brand)} · ${esc(product.name)} · ${esc(money(product.price))}</option>
   `).join("")}`;
   if (list.some((product) => product.id === current)) productSelect.value = current;
+  else productSelect.value = "";
+  if (productSelect.value !== current) applyCatalogPrice();
 }
 
-function refreshTicket() {
-  const cuotas = form.mode.value === "cuotas";
-  planFields.hidden = !cuotas;
+function saleTotal() {
+  return Number(form.total.value) || 0;
+}
+
+function applyCatalogPrice() {
   const product = selectedProduct();
-  const qty = Number(form.qty.value) || 0;
-  if (!product || qty < 1) {
-    total.textContent = "";
+  if (!product) {
+    form.price.value = "";
+    form.total.value = "";
+    catalogPrice.textContent = "";
     plan.innerHTML = "";
+    total.innerHTML = "";
     return;
   }
-  const amount = product.price * qty;
-  if (!cuotas) {
-    total.innerHTML = `<span><small>Total</small><b>${esc(money(amount))}</b></span>`;
+  catalogPrice.textContent = `En el catálogo: ${money(product.price)}`;
+  form.price.value = Number(product.price).toFixed(2);
+  syncTotalFromPrice();
+}
+
+function syncTotalFromPrice() {
+  const price = Number(form.price.value);
+  const qty = Number(form.qty.value) || 0;
+  if (price > 0 && qty > 0) form.total.value = (cents(price * qty) / 100).toFixed(2);
+  rebuildPlan();
+  paintSummary();
+}
+
+function syncPriceFromTotal() {
+  const amount = Number(form.total.value);
+  const qty = Number(form.qty.value) || 0;
+  if (amount > 0 && qty > 0) form.price.value = (amount / qty).toFixed(2);
+  rebuildPlan();
+  paintSummary();
+}
+
+function rebuildPlan() {
+  const cuotas = form.mode.value === "cuotas";
+  planFields.hidden = !cuotas;
+  const amount = saleTotal();
+  if (!cuotas || amount <= 0) {
     plan.innerHTML = "";
     return;
   }
   const count = Math.min(24, Math.max(2, Number(form.installments.value) || 2));
-  const amounts = parts(amount, count);
-  const firstNow = form.collectFirst.checked;
-  plan.innerHTML = amounts.map((part, index) => `
-    <li><span>Cuota ${index + 1}${index === 0 && firstNow ? " · se cobra ahora" : ""}</span><b>${esc(money(part))}</b></li>
-  `).join("");
-  const paidNow = firstNow ? amounts[0] : 0;
+  plan.innerHTML = planInputs(parts(amount, count), form.collectFirst.checked);
+}
+
+function paintSummary() {
+  const product = selectedProduct();
+  const amount = saleTotal();
+  if (!product || amount <= 0) {
+    total.innerHTML = "";
+    return;
+  }
+  if (form.mode.value !== "cuotas") {
+    total.innerHTML = `<span><small>Total</small><b>${esc(money(amount))}</b></span>`;
+    return;
+  }
+  const inputs = [...plan.querySelectorAll("[data-part]")];
+  const paidNow = form.collectFirst.checked && inputs[0] ? Number(inputs[0].value) || 0 : 0;
   total.innerHTML = `
     <span><small>Total</small><b>${esc(money(amount))}</b></span>
     <span><small>Hoy</small><b>${esc(money(paidNow))}</b></span>
@@ -140,10 +214,11 @@ function renderSales() {
   salesBox.innerHTML = list.map((sale) => {
     const open = sale.balance > 0.009;
     const ratio = sale.total ? Math.min(100, (sale.paid / sale.total) * 100) : 0;
-    const mode = sale.mode === "cuotas" ? `${sale.installments} cuotas` : "Al contado";
-    const next = sale.plan?.length
-      ? sale.plan[Math.min(sale.payments.length, sale.plan.length - 1)]
-      : sale.balance;
+    const abonos = sale.payments.length === 1 ? "1 abono" : `${sale.payments.length} abonos`;
+    const planAmounts = sale.plan?.length
+      ? sale.plan
+      : parts(sale.total, sale.mode === "cuotas" ? sale.installments : 1);
+    const next = planAmounts[Math.min(sale.payments.length, planAmounts.length - 1)];
     const suggested = open ? Math.min(sale.balance, Number(next) || sale.balance) : 0;
     return `
       <article class="sale">
@@ -151,14 +226,28 @@ function renderSales() {
           <h3>${esc(sale.name)}</h3>
           <span class="badge ${open ? "due" : "ok"}">${open ? "Por cobrar" : "Pagada"}</span>
         </div>
-        <p class="meta">${esc(sale.brand)} ${esc(sale.product)} · ${esc(sale.qty)} × ${esc(money(sale.price))}</p>
-        <p class="meta">${esc(mode)}${sale.mode === "cuotas" ? ` · ${sale.payments.length} de ${sale.installments} cobradas` : ""} · ${esc(when(sale.at))}</p>
+        <p class="meta">${esc(sale.brand)} ${esc(sale.product)} · ${esc(sale.qty)} u. · ${esc(money(sale.price))} c/u</p>
+        <p class="meta">Total ${esc(money(sale.total))}${sale.mode === "cuotas" ? ` · ${sale.installments} cuotas · ${abonos}` : " · Al contado"} · ${esc(when(sale.at))}</p>
         ${sale.notes ? `<p class="meta">${esc(sale.notes)}</p>` : ""}
         <div class="bar" aria-hidden="true"><span style="width:${ratio}%"></span></div>
         <p class="meta">Cobrado ${esc(money(sale.paid))} · Saldo ${esc(money(sale.balance))}</p>
         ${sale.payments.length ? `<ul class="payments">${sale.payments.map((payment, index) => `
           <li><span>${sale.mode === "cuotas" ? `Cuota ${index + 1}` : "Pago"} · ${esc(METHODS[payment.method] || payment.method)}${payment.note && payment.note !== `Cuota ${index + 1}` ? ` · ${esc(payment.note)}` : ""}</span><b>${esc(money(payment.amount))}</b></li>
         `).join("")}</ul>` : ""}
+        <button type="button" class="ghost edit-toggle" data-toggle-edit="${esc(sale.id)}">Editar precio y cuotas</button>
+        <form class="edit" data-edit="${esc(sale.id)}" data-qty="${esc(sale.qty)}" data-paid="${sale.paid}" data-mode="${esc(sale.mode)}" hidden>
+          <div class="split">
+            <label>Precio unitario <input name="price" type="number" min="0.01" step="0.01" inputmode="decimal" value="${Number(sale.price).toFixed(2)}" required></label>
+            <label>Total <input name="total" type="number" min="0.01" step="0.01" inputmode="decimal" value="${Number(sale.total).toFixed(2)}" required></label>
+          </div>
+          ${sale.mode === "cuotas" ? `
+            <label>Número de cuotas <input name="installments" type="number" min="2" max="24" value="${sale.installments}" required></label>
+            <ol class="plan">${planInputs(planAmounts, false)}</ol>
+            <p class="plan-sum hint"></p>
+          ` : ""}
+          <button type="submit">Guardar cambios</button>
+          <p class="edit-status hint"></p>
+        </form>
         ${open ? `
           <form class="pay" data-pay="${esc(sale.id)}">
             <div class="split">
@@ -188,7 +277,8 @@ async function loadDesk() {
   if (!Array.isArray(sales)) sales = [];
   renderStats();
   renderSales();
-  refreshTicket();
+  if (!form.price.value) applyCatalogPrice();
+  else paintSummary();
 }
 
 function openDesk() {
@@ -227,7 +317,8 @@ document.getElementById("mode-choices").addEventListener("click", (event) => {
   for (const item of event.currentTarget.querySelectorAll("button")) {
     item.setAttribute("aria-pressed", String(item === button));
   }
-  refreshTicket();
+  rebuildPlan();
+  paintSummary();
 });
 
 document.getElementById("filters").addEventListener("click", (event) => {
@@ -242,24 +333,131 @@ document.getElementById("filters").addEventListener("click", (event) => {
 
 productSearch.addEventListener("input", () => {
   fillProducts();
-  refreshTicket();
+  paintSummary();
 });
-form.productId.addEventListener("change", refreshTicket);
-form.qty.addEventListener("input", refreshTicket);
-form.installments.addEventListener("input", refreshTicket);
-form.collectFirst.addEventListener("change", refreshTicket);
+form.productId.addEventListener("change", applyCatalogPrice);
+form.qty.addEventListener("input", syncTotalFromPrice);
+form.price.addEventListener("input", syncTotalFromPrice);
+form.total.addEventListener("input", syncPriceFromTotal);
+form.installments.addEventListener("input", () => {
+  rebuildPlan();
+  paintSummary();
+});
+form.collectFirst.addEventListener("change", () => {
+  const label = plan.querySelector("label");
+  if (label?.firstChild) {
+    label.firstChild.textContent = form.collectFirst.checked ? "Cuota 1 · ahora" : "Cuota 1";
+  }
+  paintSummary();
+});
+plan.addEventListener("input", (event) => {
+  const input = event.target.closest("[data-part]");
+  if (!input) return;
+  const inputs = [...plan.querySelectorAll("[data-part]")];
+  if (input !== inputs[inputs.length - 1]) balanceLastPart(plan, saleTotal());
+  paintSummary();
+});
+
+function markEditSum(edit) {
+  const note = edit.querySelector(".plan-sum");
+  const box = edit.querySelector(".plan");
+  if (!note || !box) return;
+  note.textContent = partsMatch(box, Number(edit.total.value) || 0) ? "" : "Las cuotas no suman el total.";
+}
+
+function rewriteEditPlan(edit) {
+  const box = edit.querySelector(".plan");
+  if (!box) return;
+  const count = Math.min(24, Math.max(2, Number(edit.installments.value) || 2));
+  box.innerHTML = planInputs(parts(Number(edit.total.value) || 0, count), false);
+  markEditSum(edit);
+}
+
+salesBox.addEventListener("input", (event) => {
+  const edit = event.target.closest("[data-edit]");
+  if (!edit) return;
+  const qty = Number(edit.dataset.qty) || 1;
+  if (event.target.name === "price") {
+    const price = Number(edit.price.value);
+    if (price > 0) edit.total.value = (cents(price * qty) / 100).toFixed(2);
+    rewriteEditPlan(edit);
+    return;
+  }
+  if (event.target.name === "total" || event.target.name === "installments") {
+    if (event.target.name === "total") {
+      const amount = Number(edit.total.value);
+      if (amount > 0) edit.price.value = (amount / qty).toFixed(2);
+    }
+    rewriteEditPlan(edit);
+    return;
+  }
+  if (event.target.closest("[data-part]")) {
+    const inputs = [...edit.querySelectorAll("[data-part]")];
+    if (event.target !== inputs[inputs.length - 1]) balanceLastPart(edit.querySelector(".plan"), Number(edit.total.value));
+    markEditSum(edit);
+  }
+});
+
+async function saveEdit(edit) {
+  const message = edit.querySelector(".edit-status");
+  const amount = Number(edit.total.value);
+  const paid = Number(edit.dataset.paid) || 0;
+  if (!(amount > 0) || !(Number(edit.price.value) > 0)) {
+    message.textContent = ERRORS.monto;
+    return;
+  }
+  if (cents(amount) < cents(paid)) {
+    message.textContent = ERRORS.pagado;
+    return;
+  }
+  const cuotas = edit.dataset.mode === "cuotas";
+  const box = edit.querySelector(".plan");
+  if (cuotas && box && !partsMatch(box, amount)) {
+    message.textContent = ERRORS.plan;
+    return;
+  }
+  message.textContent = "Guardando…";
+  try {
+    await api("/api/admin/sales/editar", {
+      method: "POST",
+      body: JSON.stringify({
+        saleId: edit.dataset.edit,
+        price: Number(edit.price.value),
+        total: amount,
+        installments: cuotas ? Number(edit.installments.value) : 1,
+        plan: cuotas && box ? readParts(box) : undefined,
+      }),
+    });
+    status.textContent = "Venta actualizada.";
+    await loadDesk();
+  } catch (error) {
+    message.textContent = ERRORS[error.message] || "No se pudo actualizar la venta.";
+  }
+}
 find.addEventListener("input", renderSales);
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   status.textContent = "Guardando…";
+  const amount = saleTotal();
+  if (!selectedProduct() || amount <= 0) {
+    status.textContent = "Elige un perfume y un precio.";
+    return;
+  }
+  if (form.mode.value === "cuotas" && !partsMatch(plan, amount)) {
+    status.textContent = ERRORS.plan;
+    return;
+  }
   const body = {
     name: form.name.value.trim(),
     productId: form.productId.value,
     qty: Number(form.qty.value),
+    price: Number(form.price.value),
+    total: amount,
     method: form.method.value,
     mode: form.mode.value,
     installments: Number(form.installments.value),
+    plan: form.mode.value === "cuotas" ? readParts(plan) : undefined,
     collectFirst: form.collectFirst.checked,
     notes: form.notes.value.trim(),
   };
@@ -268,14 +466,22 @@ form.addEventListener("submit", async (event) => {
     form.name.value = "";
     form.notes.value = "";
     form.qty.value = "1";
+    form.price.value = "";
     status.textContent = "Venta registrada.";
     await loadDesk();
+    applyCatalogPrice();
   } catch (error) {
     status.textContent = ERRORS[error.message] || "No se pudo registrar la venta.";
   }
 });
 
 salesBox.addEventListener("submit", async (event) => {
+  const edit = event.target.closest("[data-edit]");
+  if (edit) {
+    event.preventDefault();
+    await saveEdit(edit);
+    return;
+  }
   const payForm = event.target.closest("[data-pay]");
   if (!payForm) return;
   event.preventDefault();
@@ -297,6 +503,12 @@ salesBox.addEventListener("submit", async (event) => {
 });
 
 salesBox.addEventListener("click", async (event) => {
+  const toggle = event.target.closest("[data-toggle-edit]");
+  if (toggle) {
+    const edit = salesBox.querySelector(`[data-edit="${CSS.escape(toggle.dataset.toggleEdit)}"]`);
+    if (edit) edit.hidden = !edit.hidden;
+    return;
+  }
   const button = event.target.closest("[data-remove]");
   if (!button) return;
   if (!confirm("¿Quitar esta venta del registro?")) return;

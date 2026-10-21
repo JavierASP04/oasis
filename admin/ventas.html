@@ -49,6 +49,16 @@
           </select>
         </label>
         <label>Cantidad <input name="qty" type="number" min="1" max="20" value="1" required></label>
+        <div class="split">
+          <label>Precio unitario
+            <input name="price" type="number" min="0.01" step="0.01" inputmode="decimal">
+            <span id="catalog-price" class="hint"></span>
+          </label>
+          <label>Total
+            <input name="total" type="number" min="0.01" step="0.01" inputmode="decimal">
+          </label>
+        </div>
+        <p class="hint">El precio sale del catálogo. Cámbialo si esta venta es distinta. Las cuotas se calculan sobre el total.</p>
 
         <p class="choice-label">Método de pago</p>
         <div class="choices" id="method-choices">
@@ -68,6 +78,7 @@
         <div id="plan-fields" hidden>
           <label>Número de cuotas <input name="installments" type="number" min="2" max="24" value="3"></label>
           <label class="check"><input name="collectFirst" type="checkbox" checked> Cobrar la primera ahora</label>
+          <p class="hint">Puedes corregir cada cuota. La última se ajusta para completar el total.</p>
           <ol id="plan" class="plan"></ol>
         </div>
 
