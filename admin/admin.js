@@ -1,5 +1,6 @@
 const KEY = "oasis-admin-key";
 const FAMILIES = { caballero: "Caballero", dama: "Dama", otros: "Otros" };
+const SIZES = ["50 ml", "75 ml", "90 ml", "100 ml", "105 ml"];
 
 const gate = document.getElementById("gate");
 const desk = document.getElementById("desk");
@@ -9,16 +10,25 @@ const productList = document.getElementById("product-list");
 const editor = document.getElementById("editor");
 const notesBox = document.getElementById("notes");
 const preview = document.getElementById("preview");
+const photoEmpty = document.getElementById("photo-empty");
 const photoInput = document.getElementById("photo");
+const photoDrop = document.getElementById("photo-drop");
 const editorStatus = document.getElementById("editor-status");
 const loginStatus = document.getElementById("login-status");
+const find = document.getElementById("find");
+const sortSelect = document.getElementById("sort");
+const empty = document.getElementById("empty");
+const shown = document.getElementById("shown");
+const pricePreview = document.getElementById("price-preview");
 
 let products = [];
 let currentId = null;
+let keptImage = "";
 let pendingPhoto = null;
+let filter = "todos";
 
 function money(value) {
-  return `$${new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2 }).format(Number(value) || 0)}`;
+  return `$${new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(value) || 0)}`;
 }
 
 function esc(value) {
@@ -29,9 +39,13 @@ function esc(value) {
     .replaceAll('"', "&quot;");
 }
 
+function norm(value) {
+  return String(value || "").normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+}
+
 function photoOf(product) {
   const src = product.image || `images/${product.id}.svg`;
-  if (src.startsWith("data:") || src.startsWith("http")) return src;
+  if (src.startsWith("data:") || src.startsWith("http") || src.startsWith("blob:")) return src;
   return `/${src.replace(/^\//, "")}`;
 }
 
@@ -61,60 +75,141 @@ async function api(path, options = {}) {
   return data;
 }
 
-function showList() {
+function visibleProducts() {
+  const query = norm(find.value.trim());
+  const list = products
+    .map((product, index) => ({ product, index }))
+    .filter(({ product }) => {
+      if (filter !== "todos" && (product.family || "otros") !== filter) return false;
+      if (!query) return true;
+      return norm(`${product.brand} ${product.name}`).includes(query);
+    });
+  const byName = (a, b) => a.product.name.localeCompare(b.product.name, "es", { sensitivity: "base" });
+  if (sortSelect.value === "precio-asc") list.sort((a, b) => a.product.price - b.product.price || byName(a, b));
+  else if (sortSelect.value === "precio-desc") list.sort((a, b) => b.product.price - a.product.price || byName(a, b));
+  else if (sortSelect.value === "az") list.sort(byName);
+  else list.sort((a, b) => a.index - b.index);
+  return list.map((item) => item.product);
+}
+
+function renderStats() {
+  document.getElementById("stat-count").textContent = String(products.length);
+  for (const family of Object.keys(FAMILIES)) {
+    document.getElementById(`stat-${family}`).textContent = String(
+      products.filter((product) => (product.family || "otros") === family).length,
+    );
+  }
+  for (const button of document.querySelectorAll("#filters button")) {
+    const key = button.dataset.filter;
+    const count = key === "todos"
+      ? products.length
+      : products.filter((product) => (product.family || "otros") === key).length;
+    const label = key === "todos" ? "Todos" : FAMILIES[key];
+    button.textContent = `${label} ${count}`;
+  }
+}
+
+function showList(scroll) {
   listView.hidden = false;
   editorView.hidden = true;
+  document.getElementById("catalog-stats").hidden = false;
   currentId = null;
+  keptImage = "";
   pendingPhoto = null;
   photoInput.value = "";
-  productList.innerHTML = products.map((product) => `
-    <button type="button" class="item" data-edit="${esc(product.id)}">
-      <img src="${esc(photoOf(product))}" alt="">
-      <span>
-        <strong>${esc(product.name)}</strong>
-        <span class="meta">${esc(product.brand)} · ${esc(FAMILIES[product.family] || "Otros")} · ${esc(product.size || "")}</span>
-      </span>
-      <b>${esc(money(product.price))}</b>
-    </button>
-  `).join("");
+  renderStats();
+  const list = visibleProducts();
+  empty.hidden = list.length > 0;
+  const query = find.value.trim();
+  shown.textContent = query || filter !== "todos"
+    ? `${list.length} de ${products.length}`
+    : `${products.length} en la tienda`;
+  productList.innerHTML = list.map((product) => {
+    const family = product.family || "otros";
+    return `
+      <button type="button" class="item" data-edit="${esc(product.id)}">
+        <img src="${esc(photoOf(product))}" alt="" loading="lazy">
+        <span class="item-copy">
+          <strong>${esc(product.name)}</strong>
+          <span class="meta">${esc(product.brand)} · ${esc(product.size || "")}</span>
+          <span class="badge ${esc(family)}">${esc(FAMILIES[family] || "Otros")}</span>
+        </span>
+        <b class="price">${esc(money(product.price))}</b>
+      </button>
+    `;
+  }).join("");
+  if (scroll) window.scrollTo(0, 0);
 }
 
 function noteRow(label = "", value = "") {
   const row = document.createElement("div");
   row.className = "note-row";
-  const labelInput = document.createElement("input");
-  labelInput.className = "note-label";
-  labelInput.placeholder = "Salida";
-  labelInput.value = label;
-  const valueInput = document.createElement("input");
-  valueInput.className = "note-value";
-  valueInput.placeholder = "Notas";
-  valueInput.value = value;
-  row.append(labelInput, valueInput);
+  row.innerHTML = `
+    <input class="note-label" placeholder="Salida" value="${esc(label)}">
+    <input class="note-value" placeholder="Notas" value="${esc(value)}">
+    <button type="button" class="note-remove" aria-label="Quitar esta nota">×</button>
+  `;
   notesBox.append(row);
+}
+
+function setFamily(value) {
+  editor.family.value = FAMILIES[value] ? value : "otros";
+  for (const button of document.querySelectorAll("#family-choices button")) {
+    button.setAttribute("aria-pressed", String(button.dataset.family === editor.family.value));
+  }
+}
+
+function markSizes() {
+  const current = editor.size.value.trim().toLowerCase();
+  for (const button of document.querySelectorAll("#size-chips button")) {
+    button.setAttribute("aria-pressed", String(button.dataset.size.toLowerCase() === current));
+  }
+}
+
+function showPrice() {
+  const value = editor.price.value;
+  pricePreview.textContent = value === "" ? "" : money(value);
+}
+
+function showPhoto(src) {
+  preview.hidden = !src;
+  photoEmpty.hidden = Boolean(src);
+  photoDrop.classList.toggle("empty", !src);
+  preview.src = src || "";
+}
+
+function takePhoto(file) {
+  if (!file) return;
+  pendingPhoto = file;
+  showPhoto(URL.createObjectURL(file));
 }
 
 function openEditor(product) {
   listView.hidden = true;
   editorView.hidden = false;
+  document.getElementById("catalog-stats").hidden = true;
   editorStatus.textContent = "";
   pendingPhoto = null;
   photoInput.value = "";
-  currentId = product ? product.id : null;
-  document.getElementById("editor-title").textContent = product ? "Editar perfume" : "Nuevo perfume";
-  document.getElementById("remove").hidden = !product;
+  currentId = product?.id || null;
+  keptImage = product?.image || "";
+  document.getElementById("editor-title").textContent = product?.id ? "Editar perfume" : "Nuevo perfume";
+  document.getElementById("remove").hidden = !product?.id;
+  document.getElementById("duplicate").hidden = !product?.id;
   editor.brand.value = product?.brand || "";
   editor.name.value = product?.name || "";
   editor.size.value = product?.size || "100 ml";
   editor.price.value = product?.price ?? "";
-  editor.family.value = product?.family || "otros";
+  setFamily(product?.family || "otros");
   editor.accords.value = product?.accords || "";
   editor.summary.value = product?.summary || "";
   notesBox.innerHTML = "";
   const notes = product?.notes?.length ? product.notes : [["Salida", ""], ["Corazón", ""], ["Fondo", ""]];
   for (const [label, value] of notes) noteRow(label, value);
-  preview.src = product ? photoOf(product) : "";
-  preview.hidden = !product;
+  showPhoto(product ? photoOf(product) : "");
+  markSizes();
+  showPrice();
+  window.scrollTo(0, 0);
 }
 
 function readNotes() {
@@ -155,8 +250,42 @@ document.getElementById("login").addEventListener("submit", async (event) => {
 });
 
 document.getElementById("add-product").addEventListener("click", () => openEditor(null));
-document.getElementById("cancel").addEventListener("click", showList);
+document.getElementById("cancel").addEventListener("click", () => showList(true));
 document.getElementById("add-note").addEventListener("click", () => noteRow());
+find.addEventListener("input", showList);
+sortSelect.addEventListener("change", showList);
+
+document.getElementById("filters").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-filter]");
+  if (!button) return;
+  filter = button.dataset.filter;
+  for (const item of event.currentTarget.querySelectorAll("button")) {
+    item.setAttribute("aria-pressed", String(item === button));
+  }
+  showList();
+});
+
+document.getElementById("family-choices").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-family]");
+  if (!button) return;
+  setFamily(button.dataset.family);
+});
+
+document.getElementById("size-chips").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-size]");
+  if (!button) return;
+  editor.size.value = button.dataset.size;
+  markSizes();
+});
+
+editor.size.addEventListener("input", markSizes);
+editor.price.addEventListener("input", showPrice);
+
+notesBox.addEventListener("click", (event) => {
+  const button = event.target.closest(".note-remove");
+  if (!button) return;
+  button.closest(".note-row").remove();
+});
 
 productList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-edit]");
@@ -164,16 +293,33 @@ productList.addEventListener("click", (event) => {
   openEditor(products.find((product) => product.id === button.dataset.edit));
 });
 
-photoInput.addEventListener("change", () => {
-  const file = photoInput.files?.[0];
-  pendingPhoto = file || null;
-  if (!file) return;
-  preview.hidden = false;
-  preview.src = URL.createObjectURL(file);
+photoDrop.addEventListener("click", () => photoInput.click());
+photoDrop.addEventListener("dragover", (event) => {
+  event.preventDefault();
+  photoDrop.classList.add("over");
+});
+photoDrop.addEventListener("dragleave", () => photoDrop.classList.remove("over"));
+photoDrop.addEventListener("drop", (event) => {
+  event.preventDefault();
+  photoDrop.classList.remove("over");
+  const file = event.dataTransfer?.files?.[0];
+  if (file && file.type.startsWith("image/")) takePhoto(file);
+});
+photoInput.addEventListener("change", () => takePhoto(photoInput.files?.[0]));
+
+document.getElementById("duplicate").addEventListener("click", () => {
+  const product = products.find((item) => item.id === currentId);
+  if (!product) return;
+  openEditor({
+    ...product,
+    id: null,
+    name: `${product.name} copia`,
+  });
 });
 
 document.getElementById("remove").addEventListener("click", async () => {
   if (!currentId || !confirm("¿Eliminar este perfume del catálogo?")) return;
+  const previous = products;
   products = products.filter((product) => product.id !== currentId);
   try {
     await api("/api/catalog", {
@@ -181,8 +327,9 @@ document.getElementById("remove").addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(products),
     });
-    showList();
+    showList(true);
   } catch {
+    products = previous;
     editorStatus.textContent = "No se pudo eliminar.";
   }
 });
@@ -192,7 +339,7 @@ editor.addEventListener("submit", async (event) => {
   editorStatus.textContent = "Guardando…";
   const name = editor.name.value.trim();
   const id = currentId || uniqueId(name);
-  let image = products.find((product) => product.id === id)?.image || "";
+  let image = keptImage || products.find((product) => product.id === id)?.image || "";
   try {
     if (pendingPhoto) {
       const uploaded = await api("/api/image", {
@@ -222,7 +369,7 @@ editor.addEventListener("submit", async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(products),
     });
-    showList();
+    showList(true);
   } catch (error) {
     editorStatus.textContent = error.message === "peso"
       ? "La foto pesa más de 15 MB."

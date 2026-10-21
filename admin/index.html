@@ -13,9 +13,11 @@
 <body>
   <header class="top">
     <a class="brand" href="/">Oasis</a>
-    <p>Admin</p>
-    <a class="back" href="/admin/ventas">Ventas</a>
-    <a class="back" href="/">Ver tienda</a>
+    <nav class="nav" aria-label="Admin">
+      <a href="/admin" aria-current="page">Catálogo</a>
+      <a href="/admin/ventas">Ventas</a>
+      <a href="/">Tienda</a>
+    </nav>
   </header>
 
   <main id="gate" class="sheet">
@@ -28,63 +30,124 @@
     </form>
   </main>
 
-  <main id="desk" hidden>
+  <main id="desk" class="catalog" hidden>
+    <section class="stats" id="catalog-stats" aria-label="Resumen del catálogo">
+      <article><span>Perfumes</span><strong id="stat-count">0</strong></article>
+      <article><span>Caballero</span><strong id="stat-caballero">0</strong></article>
+      <article><span>Dama</span><strong id="stat-dama">0</strong></article>
+      <article><span>Otros</span><strong id="stat-otros">0</strong></article>
+    </section>
+
     <section id="list-view">
       <div class="list-bar">
-        <h1>Catálogo</h1>
+        <div>
+          <h1>Catálogo</h1>
+          <p id="shown" class="hint"></p>
+        </div>
         <button type="button" id="add-product">Nuevo perfume</button>
       </div>
+
+      <div class="toolbar">
+        <label>Buscar
+          <input id="find" type="search" placeholder="Nombre o casa" autocomplete="off">
+        </label>
+        <label>Orden
+          <select id="sort">
+            <option value="catalogo">Como está en la tienda</option>
+            <option value="precio-asc">Menor precio</option>
+            <option value="precio-desc">Mayor precio</option>
+            <option value="az">A-Z</option>
+          </select>
+        </label>
+        <div class="filters" id="filters">
+          <button type="button" data-filter="todos" aria-pressed="true">Todos</button>
+          <button type="button" data-filter="caballero">Caballero</button>
+          <button type="button" data-filter="dama">Dama</button>
+          <button type="button" data-filter="otros">Otros</button>
+        </div>
+      </div>
+
       <div id="product-list" class="product-list"></div>
+      <p id="empty" class="empty" hidden>Ningún perfume coincide con esta búsqueda.</p>
+
       <section class="tools">
-        <h2>Respaldo y carga</h2>
-        <p class="hint">Las fotos se comprimen solas al guardar. Puedes subirlas tal cual desde el teléfono.</p>
-        <div class="tool-row">
-          <button type="button" id="download-backup">Descargar respaldo</button>
-          <label class="file">Restaurar respaldo
-            <input id="restore-backup" type="file" accept=".zip,application/zip">
-          </label>
+        <h2>Archivos</h2>
+        <div class="tool-grid">
+          <article>
+            <h3>Respaldo</h3>
+            <p>Un zip con el catálogo y las fotos. El CSV se abre en Excel.</p>
+            <button type="button" id="download-backup">Descargar respaldo</button>
+          </article>
+          <article>
+            <h3>Restaurar</h3>
+            <p>Reemplaza el catálogo y las fotos por las de un respaldo.</p>
+            <label class="file">Elegir respaldo
+              <input id="restore-backup" type="file" accept=".zip,application/zip">
+            </label>
+          </article>
+          <article>
+            <h3>Carga masiva</h3>
+            <p>Agrega o actualiza. No borra los perfumes que no vengan en el archivo. Categoría: caballero, dama u otros.</p>
+            <button type="button" id="download-template" class="ghost">Plantilla CSV</button>
+            <label class="file">Cargar CSV o zip
+              <input id="import-catalog" type="file" accept=".csv,.zip,text/csv,application/zip">
+            </label>
+          </article>
         </div>
-        <p class="hint">El respaldo es un zip con catalogo.csv y la carpeta imagenes. Se abre en Excel. Restaurar reemplaza el catálogo.</p>
-        <div class="tool-row">
-          <button type="button" id="download-template" class="ghost">Plantilla CSV</button>
-          <label class="file">Cargar CSV o zip
-            <input id="import-catalog" type="file" accept=".csv,.zip,text/csv,application/zip">
-          </label>
-        </div>
-        <p class="hint">Para varios perfumes, llena la plantilla. Categoría: caballero, dama u otros. Si el archivo trae fotos, van en la carpeta imagenes y la columna foto lleva el nombre del archivo. Esta carga agrega o actualiza, y no borra el resto.</p>
         <p id="tools-status" class="status" role="status"></p>
       </section>
     </section>
 
     <section id="editor-view" hidden>
-      <form id="editor" class="editor">
+      <form id="editor" class="editor" autocomplete="off">
         <div class="editor-top">
-          <h1 id="editor-title">Editar</h1>
-          <button type="button" id="cancel" class="ghost">Volver</button>
+          <div>
+            <h1 id="editor-title">Editar</h1>
+            <p class="hint">La foto se comprime sola al guardar.</p>
+          </div>
+          <div class="top-actions">
+            <button type="button" id="cancel" class="ghost">Volver</button>
+            <button type="submit">Guardar</button>
+          </div>
         </div>
         <div class="editor-grid">
           <div class="photo-field">
-            <div class="photo-frame"><img id="preview" alt=""></div>
-            <label class="file">
-              Cambiar foto
-              <input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
-            </label>
-            <p class="hint">Se comprime sola al guardar.</p>
+            <button type="button" class="photo-frame" id="photo-drop">
+              <img id="preview" alt="" hidden>
+              <span id="photo-empty">Toca para elegir la foto<br>o suéltala aquí</span>
+            </button>
+            <input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
           </div>
           <div class="fields">
-            <label>Casa <input name="brand" required></label>
-            <label>Nombre <input name="name" required></label>
             <div class="split">
-              <label>Tamaño <input name="size" placeholder="100 ml" required></label>
-              <label>Precio en $ <input name="price" type="number" min="0" step="0.01" required></label>
+              <label>Casa <input name="brand" required></label>
+              <label>Nombre <input name="name" required></label>
             </div>
-            <label>Categoría
-              <select name="family">
-                <option value="caballero">Caballero</option>
-                <option value="dama">Dama</option>
-                <option value="otros">Otros</option>
-              </select>
+            <label>Tamaño
+              <input name="size" placeholder="100 ml" required>
             </label>
+            <div class="chips" id="size-chips">
+              <button type="button" data-size="50 ml">50 ml</button>
+              <button type="button" data-size="75 ml">75 ml</button>
+              <button type="button" data-size="90 ml">90 ml</button>
+              <button type="button" data-size="100 ml">100 ml</button>
+              <button type="button" data-size="105 ml">105 ml</button>
+            </div>
+            <div class="split">
+              <label>Precio en $
+                <input name="price" type="number" min="0" step="0.01" required>
+                <span id="price-preview" class="hint"></span>
+              </label>
+              <div>
+                <p class="choice-label">Categoría</p>
+                <div class="choices" id="family-choices">
+                  <button type="button" data-family="caballero">Caballero</button>
+                  <button type="button" data-family="dama">Dama</button>
+                  <button type="button" data-family="otros">Otros</button>
+                </div>
+                <input type="hidden" name="family" value="otros">
+              </div>
+            </div>
             <label>Notas cortas <input name="accords" placeholder="Dátil, canela y vainilla"></label>
             <label>Descripción <textarea name="summary" rows="3"></textarea></label>
             <fieldset>
@@ -96,6 +159,7 @@
         </div>
         <div class="editor-actions">
           <button type="submit">Guardar</button>
+          <button type="button" id="duplicate" class="ghost">Duplicar</button>
           <button type="button" id="remove" class="danger">Eliminar</button>
         </div>
         <p id="editor-status" class="status" role="status"></p>
